@@ -74,7 +74,7 @@ def compute_loss_y(nll, y_logits, y_weight, y, multi_class, reduction="mean"):
 @hydra.main(config_path="config.yaml")
 def main(cfg):
 
-    set = cfg.set
+    dataset = cfg.dataset
     dataroot = cfg.dataroot
     download = cfg.download
     augment = cfg.augment
@@ -113,12 +113,6 @@ def main(cfg):
             raise FileExistsError(
                 "Please provide a path to a non-existing or empty directory. Alternatively, pass the --fresh flag."  # noqa
             )
-
-    kwargs = vars(args)
-    del kwargs["fresh"]
-
-    with open(os.path.join(args.output_dir, "hparams.json"), "w") as fp:
-        json.dump(kwargs, fp, sort_keys=True, indent=4)
 
     device = "cpu" if (not torch.cuda.is_available() or not cuda) else "cuda:0"
 
@@ -320,4 +314,4 @@ def main(cfg):
 
 
 if __name__ == "__main__":
-    main(cfg)
+    main()

@@ -1,16 +1,16 @@
 dataset: cifar10
 dataroot: './'
 download: True
-no_augment: False
+augment: False
 hidden_channels: 512
 K: 32
 L: 3
 actnorm_scale: 1.0
 flow_permutation: invconv # ["invconv", "shuffle", "reverse"]
 flow_coupling: affine  # choices=["additive", "affine"]
-no_LU_decomposed: False
-no_learn_top: False
-y_condition: True
+LU_decomposed: False
+learn_top: False
+y_condition: False
 y_weight: 0.01 # "Weight for class condition loss"
 max_grad_clip: 0 # "Max gradient value (clip above - for off)"
 max_grad_norm: 0 # "Max norm of gradient (clip above - 0 for off)"
@@ -21,7 +21,7 @@ epochs: 250 # "number of epochs to train for"
 lr: 5e-5
 warmup: 5 # "Use this number of epochs to warmup learning rate linearly from zero to learning rate"
 n_init_batches: 8  # "Number of batches to use for Act Norm initialisation"
-no_cuda: False
+cuda: True
 output_dir: "output/"
 fresh: True # "Remove output directory before starting"
 saved_model: "" # "Path to model to load for continuing training"
