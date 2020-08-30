@@ -76,7 +76,7 @@ def compute_loss_y(nll, y_logits, y_weight, y, multi_class, reduction="mean"):
 
 
 class GlowLighting(pl.LightningModule):
-    def __init__(self, model, opt_type, lr, train_dataset, test_dataset, batch_size, eval_batch_size, n_workers, use_swa, swa_lr, y_condition, y_weight, warmup, multi_class=False):
+    def __init__(self, model, opt_type, lr, train_dataset, test_dataset, batch_size, eval_batch_size, n_workers, use_swa, swa_lr, y_condition, y_weight, warmup, n_init_batches, multi_class=False):
         super().__init__()
         self.model = model
         self.opt_type = opt_type
@@ -92,6 +92,7 @@ class GlowLighting(pl.LightningModule):
         self.y_condition = y_condition
         self.y_weight = y_weight
         self.warmup = warmup
+        self.n_init_batches = n_init_batches
 
     def forward(self, x=None, y_onehot=None, z=None, temperature=None, reverse=False):
         return self.model.forward(x=x, y_onehot=y_onehot, z=z, temperature=temperature, reverse=reverse)
@@ -258,7 +259,7 @@ def main(cfg):
     )
 
     glow_light = GlowLighting(model, opt_type, lr, train_dataset, test_dataset,
-                              batch_size, eval_batch_size, n_workers, use_swa, swa_lr, y_condition, y_weight, warmup)
+                              batch_size, eval_batch_size, n_workers, use_swa, swa_lr, y_condition, y_weight, warmup, n_init_batches)
 
     wandb_logger = WandbLogger(
         name='Glow experiment with faces', project='glow-experiments')
