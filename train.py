@@ -10,6 +10,7 @@ import torch.nn.functional as F
 from torch.optim.swa_utils import AveragedModel, SWALR
 import torch.optim as optim
 import torch.utils.data as data
+import torch.autograd.profiler as profiler
 
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import WandbLogger
@@ -233,39 +234,42 @@ def main(cfg):
         learn_top,
         y_condition,
     )
-    # TODO move to method
-    model.cuda()
-    model.train()
-    train_loader = data.DataLoader(
-        train_dataset,
-        batch_size=batch_size,
-        shuffle=True,
-        num_workers=n_workers,
-        drop_last=True,
-    )
-    init_batches = []
-    init_targets = []
 
-    with torch.no_grad():
-        for batch, target in islice(train_loader, None, n_init_batches):
-            init_batches.append(batch)
-            init_targets.append(target)
+    def init_act():
+        model.cuda()
+        model.train()
+        train_loader = data.DataLoader(
+            train_dataset,
+            batch_size=batch_size,
+            shuffle=True,
+            num_workers=n_workers,
+            drop_last=True,
+        )
+        init_batches = []
+        init_targets = []
 
-        init_batches = torch.cat(init_batches).cuda()
-        assert init_batches.shape[0] == n_init_batches * batch_size
+        with torch.no_grad():
+            for batch, target in islice(train_loader, None, n_init_batches):
+                init_batches.append(batch)
+                init_targets.append(target)
 
-        if y_condition:
-            init_targets = torch.cat(init_targets).cuda()
-        else:
-            init_targets = None
+            init_batches = torch.cat(init_batches).cuda()
+            assert init_batches.shape[0] == n_init_batches * batch_size
 
-        model.forward(init_batches, init_targets)
-        print("Finished initialization")
-    del init_batches
-    del init_targets
-    del train_loader
-    model.cpu()
-    # END
+            if y_condition:
+                init_targets = torch.cat(init_targets).cuda()
+            else:
+                init_targets = None
+
+            temp = model.forward(init_batches, init_targets)
+            print("Finished initialization")
+        del init_batches
+        del init_targets
+        del train_loader
+        del temp
+        model.cpu()
+        torch.cuda.empty_cache()
+        print(torch.cuda.memory_summary())
 
     glow_light = GlowLighting(model, opt_type, lr, train_dataset, test_dataset,
                               batch_size, eval_batch_size, n_workers, use_swa, swa_lr, y_condition, y_weight, warmup, n_init_batches)
