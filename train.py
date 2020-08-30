@@ -253,7 +253,6 @@ def main(cfg):
 
         init_batches = torch.cat(init_batches).cuda()
 
-        print(init_batches.shape[0], n_init_batches * batch_size)
         assert init_batches.shape[0] == n_init_batches * batch_size
 
         if y_condition:
