@@ -239,7 +239,7 @@ def main(cfg):
     init_targets = []
 
     with torch.no_grad():
-        for batch, target in islice(rain_dataset, None, batch_size*n_init_batches):
+        for batch, target in islice(train_dataset, None, batch_size*n_init_batches):
             init_batches.append(batch)
             init_targets.append(target)
 
