@@ -151,7 +151,7 @@ class GlowLighting(pl.LightningModule):
 
     def validation_step(self, batch, batch_nb):
         x, y = batch
-        if y_condition:
+        if self.y_condition:
             z, nll, y_logits = self.forward(x, y)
             losses = compute_loss_y(
                 nll, y_logits, self.y_weight, y, self.multi_class, reduction="none"
