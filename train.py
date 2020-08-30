@@ -239,7 +239,7 @@ def main(cfg):
         name='Glow experiment with faces', project='glow-experiments')
 
     checkpoint_callback = ModelCheckpoint(
-        filepath=os.path.join(output_dir, saved_model), save_best_only=True, verbose=True, monitor='val_loss', mode='min')
+        filepath=os.path.join(output_dir, saved_model), verbose=True, monitor='val_loss', mode='min')
     trainer = pl.Trainer(max_epochs=epochs, gpus=num_gpu,
                          gradient_clip_val=max_grad_norm, logger=wandb_logger, precision=precision, checkpoint_callback=checkpoint_callback, accumulate_grad_batches=accumulate_grad_batches)
     trainer.fit(glow_light)
