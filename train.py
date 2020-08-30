@@ -235,11 +235,18 @@ def main(cfg):
     )
     # TODO move to method
     model.train()
+    train_loader = data.DataLoader(
+        train_dataset,
+        batch_size=batch_size,
+        shuffle=True,
+        num_workers=n_workers,
+        drop_last=True,
+    )
     init_batches = []
     init_targets = []
 
     with torch.no_grad():
-        for batch, target in islice(train_dataset, None, batch_size*n_init_batches):
+        for batch, target in islice(train_loader, None, n_init_batches):
             init_batches.append(batch)
             init_targets.append(target)
 
@@ -257,6 +264,7 @@ def main(cfg):
         print("Finished initialization")
     del init_batches
     del init_targets
+    del train_loader
     # END
 
     glow_light = GlowLighting(model, opt_type, lr, train_dataset, test_dataset,
