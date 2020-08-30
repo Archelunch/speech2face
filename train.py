@@ -245,6 +245,7 @@ def main(cfg):
 
         init_batches = torch.cat(init_batches).cuda()
 
+        print(init_batches.shape[0], n_init_batches * batch_size)
         assert init_batches.shape[0] == n_init_batches * batch_size
 
         if y_condition:
@@ -254,6 +255,8 @@ def main(cfg):
 
         model.forward(init_batches, init_targets)
         print("Finished initialization")
+    del init_batches
+    del init_targets
     # END
 
     glow_light = GlowLighting(model, opt_type, lr, train_dataset, test_dataset,
