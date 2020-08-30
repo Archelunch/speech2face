@@ -76,7 +76,7 @@ def compute_loss_y(nll, y_logits, y_weight, y, multi_class, reduction="mean"):
 
 
 class GlowLighting(pl.LightningModule):
-    def __init__(self, model, opt_type, lr, train_dataset, test_dataset, batch_size, eval_batch_size, n_workers, use_swa, swa_lr, y_condition, y_weight, multi_class=False):
+    def __init__(self, model, opt_type, lr, train_dataset, test_dataset, batch_size, eval_batch_size, n_workers, use_swa, swa_lr, y_condition, y_weight, warmup, multi_class=False):
         super().__init__()
         self.model = model
         self.opt_type = opt_type
@@ -91,15 +91,17 @@ class GlowLighting(pl.LightningModule):
         self.swa_lr = swa_lr
         self.y_condition = y_condition
         self.y_weight = y_weight
+        self.warmup = warmup
 
     def forward(self, x=None, y_onehot=None, z=None, temperature=None, reverse=False):
         return self.model.forward(x=x, y_onehot=y_onehot, z=z, temperature=temperature, reverse=reverse)
 
     def configure_optimizers(self):
+        """TODO SWA"""
         if self.opt_type == "AdamW":
             optimizer = optim.AdamW(self.parameters(), lr=self.lr)
 
-        def lr_lambda(epoch): return min(1.0, (epoch + 1) / warmup)  # noqa
+        def lr_lambda(epoch): return min(1.0, (epoch + 1) / self.warmup)  # noqa
 
         scheduler = optim.lr_scheduler.LambdaLR(
             optimizer, lr_lambda=lr_lambda)
@@ -199,6 +201,7 @@ def main(cfg):
     warmup = cfg.warmup
     precision = cfg.precision
     num_gpu = cfg.num_gpu
+    accumulate_grad_batches = cfg.accumulate_grad_batches
 
     try:
         os.makedirs(cfg.output_dir)
@@ -230,7 +233,7 @@ def main(cfg):
         y_condition,
     )
     glow_light = GlowLighting(model, opt_type, lr, train_dataset, test_dataset,
-                              batch_size, eval_batch_size, n_workers, use_swa, swa_lr, y_condition, y_weight)
+                              batch_size, eval_batch_size, n_workers, use_swa, swa_lr, y_condition, y_weight, warmup)
 
     wandb_logger = WandbLogger(
         name='Glow experiment with faces', project='glow-experiments')
@@ -238,7 +241,7 @@ def main(cfg):
     checkpoint_callback = ModelCheckpoint(
         filepath=os.path.join(output_dir, saved_model), save_best_only=True, verbose=True, monitor='val_loss', mode='min')
     trainer = pl.Trainer(max_epochs=epochs, gpus=num_gpu,
-                         gradient_clip_val=max_grad_norm, logger=wandb_logger, precision=precision, checkpoint_callback=checkpoint_callback)
+                         gradient_clip_val=max_grad_norm, logger=wandb_logger, precision=precision, checkpoint_callback=checkpoint_callback, accumulate_grad_batches=accumulate_grad_batches)
     trainer.fit(glow_light)
 
 

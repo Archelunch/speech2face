@@ -3,8 +3,8 @@ dataroot: './'
 download: True
 augment: True
 hidden_channels: 512
-K: 32
-L: 3
+K: 48
+L: 4
 actnorm_scale: 1.0
 flow_permutation: invconv # ["invconv", "shuffle", "reverse"]
 flow_coupling: affine  # choices=["additive", "affine"]
@@ -12,11 +12,11 @@ LU_decomposed: False
 learn_top: False
 y_condition: False
 y_weight: 0.01 # "Weight for class condition loss"
-max_grad_clip: 0 # "Max gradient value (clip above - for off)"
-max_grad_norm: 0 # "Max norm of gradient (clip above - 0 for off)"
+max_grad_clip: 0.5 # "Max gradient value (clip above - for off)"
+max_grad_norm: 0.5 # "Max norm of gradient (clip above - 0 for off)"
 n_workers: 4 # "number of data loading workers"
-batch_size: 16 # "batch size used during training"
-eval_batch_size: 16 # "batch size used during evaluation"
+batch_size: 32 # "batch size used during training"
+eval_batch_size: 64 # "batch size used during evaluation"
 epochs: 1000 # "number of epochs to train for"
 opt_type: 'AdamW' #name of optimizer
 lr: 5e-5
@@ -31,5 +31,6 @@ fresh: True # "Remove output directory before starting"
 saved_model: "./models" # "Path to model to load for continuing training"
 saved_optimizer: "./optimizers" #"Path to optimizer to load for continuing training"
 seed: 666
-precision: 32
+precision: 16
 num_gpu: 1
+accumulate_grad_batches: 4
