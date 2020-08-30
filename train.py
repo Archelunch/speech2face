@@ -8,14 +8,16 @@ from itertools import islice
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
+from optim.swa_utils import AveragedModel, SWALR
 import torch.utils.data as data
 
-from ignite.contrib.handlers import ProgressBar
-from ignite.engine import Engine, Events
-from ignite.handlers import ModelCheckpoint, Timer
-from ignite.metrics import RunningAverage, Loss
+import pytorch_lightning as pl
+from pytorch_lightning.loggers import WandbLogger
+from pytorch_lightning.callbacks import ModelCheckpoint
 
-from datasets import get_CIFAR10, get_SVHN
+import wandb
+
+from datasets import get_CIFAR10, get_SVHN, get_CELEBA
 from model import Glow
 
 
@@ -31,10 +33,12 @@ def check_dataset(dataset, dataroot, augment, download):
     if dataset == "cifar10":
         cifar10 = get_CIFAR10(augment, dataroot, download)
         input_size, num_classes, train_dataset, test_dataset = cifar10
-    if dataset == "svhn":
+    elif dataset == "svhn":
         svhn = get_SVHN(augment, dataroot, download)
         input_size, num_classes, train_dataset, test_dataset = svhn
-
+    elif dataset == "celeba":
+        celeba = get_CELEBA(augment, dataroot, download)
+        input_size, num_classes, train_dataset, test_dataset = celeba
     return input_size, num_classes, train_dataset, test_dataset
 
 
@@ -71,6 +75,93 @@ def compute_loss_y(nll, y_logits, y_weight, y, multi_class, reduction="mean"):
     return losses
 
 
+class GlowLighting(pl.LightningModule):
+    def __init__(self, model, opt_type, lr, train_dataset, test_dataset, batch_size, eval_batch_size, n_workers, use_swa, swa_lr, y_condition, y_weight, multi_class=False):
+        super().__init__()
+        self.model = model
+        self.opt_type = opt_type
+        self.lr = lr
+        self.n_workers = n_workers
+        self.eval_batch_size = eval_batch_size
+        self.test_dataset = test_dataset
+        self.batch_size = batch_size
+        self.train_dataset = train_dataset
+        self.use_swa = use_swa
+        self.multi_class = multi_class
+        self.swa_lr = swa_lr
+        self.y_condition = y_condition
+        self.y_weight = y_weight
+
+    def forward(self, x=None, y_onehot=None, z=None, temperature=None, reverse=False):
+        return self.model.forward(x=x, y_onehot=y_onehot, z=z, temperature=temperature, reverse=reverse)
+
+    def configure_optimizers(self):
+        if self.opt_type == "AdamW":
+            optimizer = optim.AdamW(self.parameters(), lr=self.lr)
+
+        def lr_lambda(epoch): return min(1.0, (epoch + 1) / warmup)  # noqa
+
+        scheduler = optim.lr_scheduler.LambdaLR(
+            optimizer, lr_lambda=lr_lambda)
+
+        if self.use_swa:
+            swa_model = AveragedModel(self.model)
+            swa_scheduler = SWALR(optimizer, swa_lr=self.swa_lr)
+
+        return [optimizer], [scheduler]
+
+    def train_dataloader(self):
+        train_loader = data.DataLoader(
+            self.train_dataset,
+            batch_size=self.batch_size,
+            shuffle=True,
+            num_workers=self.n_workers,
+            drop_last=True,
+        )
+        return train_loader
+
+    def val_dataloader(self):
+        test_loader = data.DataLoader(
+            self.test_dataset,
+            batch_size=self.eval_batch_size,
+            shuffle=False,
+            num_workers=self.n_workers,
+            drop_last=False,
+        )
+        return test_loader
+
+    def training_step(self, batch, batch_nb):
+        x, y = batch
+        if self.y_condition:
+            z, nll, y_logits = self.forward(x, y)
+            losses = compute_loss_y(
+                nll, y_logits, self.y_weight, y, self.multi_class)
+        else:
+            z, nll, y_logits = self.forward(x, None)
+            losses = compute_loss(nll)
+
+        return {
+            'loss': losses["total_loss"],
+            'log': {
+                'train_loss': losses["total_loss"]
+            }
+        }
+
+    def validation_step(self, batch, batch_nb):
+        x, y = batch
+        if y_condition:
+            z, nll, y_logits = self.forward(x, y)
+            losses = compute_loss_y(
+                nll, y_logits, self.y_weight, y, self.multi_class, reduction="none"
+            )
+        else:
+            z, nll, y_logits = self.forward(x, None)
+            losses = compute_loss(nll, reduction="none")
+        return {
+            'val_loss': losses["total_loss"],
+        }
+
+
 @hydra.main(config_path="config.yaml")
 def main(cfg):
 
@@ -95,13 +186,19 @@ def main(cfg):
     y_weight = cfg.y_weight
     max_grad_clip = cfg.max_grad_clip
     max_grad_norm = cfg.max_grad_norm
+    opt_type = cfg.opt_type
     lr = cfg.lr
+    use_swa = cfg.use_swa
+    swa_start = cfg.swa_start
+    swa_lr = cfg.swa_lr
     n_workers = cfg.n_workers
     cuda = cfg.cuda
     n_init_batches = cfg.n_init_batches
     output_dir = cfg.output_dir
     saved_optimizer = cfg.saved_optimizer
     warmup = cfg.warmup
+    precision = cfg.precision
+    num_gpu = cfg.num_gpu
 
     try:
         os.makedirs(cfg.output_dir)
@@ -114,30 +211,10 @@ def main(cfg):
                 "Please provide a path to a non-existing or empty directory. Alternatively, pass the --fresh flag."  # noqa
             )
 
-    device = "cpu" if (not torch.cuda.is_available() or not cuda) else "cuda:0"
-
     check_manual_seed(seed)
 
     ds = check_dataset(dataset, dataroot, augment, download)
     image_shape, num_classes, train_dataset, test_dataset = ds
-
-    # Note: unsupported for now
-    multi_class = False
-
-    train_loader = data.DataLoader(
-        train_dataset,
-        batch_size=batch_size,
-        shuffle=True,
-        num_workers=n_workers,
-        drop_last=True,
-    )
-    test_loader = data.DataLoader(
-        test_dataset,
-        batch_size=eval_batch_size,
-        shuffle=False,
-        num_workers=n_workers,
-        drop_last=False,
-    )
 
     model = Glow(
         image_shape,
@@ -152,165 +229,17 @@ def main(cfg):
         learn_top,
         y_condition,
     )
+    glow_light = GlowLighting(model, opt_type, lr, train_dataset, test_dataset,
+                              batch_size, eval_batch_size, n_workers, use_swa, swa_lr, y_condition, y_weight)
 
-    model = model.to(device)
-    optimizer = optim.Adamax(model.parameters(), lr=lr, weight_decay=5e-5)
+    wandb_logger = WandbLogger(
+        name='Glow experiment with faces', project='glow-experiments')
 
-    lr_lambda = lambda epoch: min(1.0, (epoch + 1) / warmup)  # noqa
-    scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lr_lambda)
-
-    def step(engine, batch):
-        model.train()
-        optimizer.zero_grad()
-
-        x, y = batch
-        x = x.to(device)
-
-        if y_condition:
-            y = y.to(device)
-            z, nll, y_logits = model(x, y)
-            losses = compute_loss_y(nll, y_logits, y_weight, y, multi_class)
-        else:
-            z, nll, y_logits = model(x, None)
-            losses = compute_loss(nll)
-
-        losses["total_loss"].backward()
-
-        if max_grad_clip > 0:
-            torch.nn.utils.clip_grad_value_(model.parameters(), max_grad_clip)
-        if max_grad_norm > 0:
-            torch.nn.utils.clip_grad_norm_(model.parameters(), max_grad_norm)
-
-        optimizer.step()
-
-        return losses
-
-    def eval_step(engine, batch):
-        model.eval()
-
-        x, y = batch
-        x = x.to(device)
-
-        with torch.no_grad():
-            if y_condition:
-                y = y.to(device)
-                z, nll, y_logits = model(x, y)
-                losses = compute_loss_y(
-                    nll, y_logits, y_weight, y, multi_class, reduction="none"
-                )
-            else:
-                z, nll, y_logits = model(x, None)
-                losses = compute_loss(nll, reduction="none")
-
-        return losses
-
-    trainer = Engine(step)
-    checkpoint_handler = ModelCheckpoint(
-        output_dir, "glow", n_saved=2, require_empty=False
-    )
-
-    trainer.add_event_handler(
-        Events.EPOCH_COMPLETED,
-        checkpoint_handler,
-        {"model": model, "optimizer": optimizer},
-    )
-
-    monitoring_metrics = ["total_loss"]
-    RunningAverage(output_transform=lambda x: x["total_loss"]).attach(
-        trainer, "total_loss"
-    )
-
-    evaluator = Engine(eval_step)
-
-    # Note: replace by https://github.com/pytorch/ignite/pull/524 when released
-    Loss(
-        lambda x, y: torch.mean(x),
-        output_transform=lambda x: (
-            x["total_loss"],
-            torch.empty(x["total_loss"].shape[0]),
-        ),
-    ).attach(evaluator, "total_loss")
-
-    if y_condition:
-        monitoring_metrics.extend(["nll"])
-        RunningAverage(output_transform=lambda x: x["nll"]).attach(trainer, "nll")
-
-        # Note: replace by https://github.com/pytorch/ignite/pull/524 when released
-        Loss(
-            lambda x, y: torch.mean(x),
-            output_transform=lambda x: (x["nll"], torch.empty(x["nll"].shape[0])),
-        ).attach(evaluator, "nll")
-
-    pbar = ProgressBar()
-    pbar.attach(trainer, metric_names=monitoring_metrics)
-
-    # load pre-trained model if given
-    if saved_model:
-        model.load_state_dict(torch.load(saved_model))
-        model.set_actnorm_init()
-
-        if saved_optimizer:
-            optimizer.load_state_dict(torch.load(saved_optimizer))
-
-        file_name, ext = os.path.splitext(saved_model)
-        resume_epoch = int(file_name.split("_")[-1])
-
-        @trainer.on(Events.STARTED)
-        def resume_training(engine):
-            engine.state.epoch = resume_epoch
-            engine.state.iteration = resume_epoch * len(engine.state.dataloader)
-
-    @trainer.on(Events.STARTED)
-    def init(engine):
-        model.train()
-
-        init_batches = []
-        init_targets = []
-
-        with torch.no_grad():
-            for batch, target in islice(train_loader, None, n_init_batches):
-                init_batches.append(batch)
-                init_targets.append(target)
-
-            init_batches = torch.cat(init_batches).to(device)
-
-            assert init_batches.shape[0] == n_init_batches * batch_size
-
-            if y_condition:
-                init_targets = torch.cat(init_targets).to(device)
-            else:
-                init_targets = None
-
-            model(init_batches, init_targets)
-
-    @trainer.on(Events.EPOCH_COMPLETED)
-    def evaluate(engine):
-        evaluator.run(test_loader)
-
-        scheduler.step()
-        metrics = evaluator.state.metrics
-
-        losses = ", ".join([f"{key}: {value:.2f}" for key, value in metrics.items()])
-
-        print(f"Validation Results - Epoch: {engine.state.epoch} {losses}")
-
-    timer = Timer(average=True)
-    timer.attach(
-        trainer,
-        start=Events.EPOCH_STARTED,
-        resume=Events.ITERATION_STARTED,
-        pause=Events.ITERATION_COMPLETED,
-        step=Events.ITERATION_COMPLETED,
-    )
-
-    @trainer.on(Events.EPOCH_COMPLETED)
-    def print_times(engine):
-        pbar.log_message(
-            f"Epoch {engine.state.epoch} done. Time per batch: {timer.value():.3f}[s]"
-        )
-        timer.reset()
-
-    trainer.run(train_loader, epochs)
+    checkpoint_callback = ModelCheckpoint(
+        filepath=os.path.join(output_dir, saved_model), save_best_only=True, verbose=True, monitor='val_loss', mode='min')
+    trainer = pl.Trainer(max_epochs=epochs, gpus=num_gpu,
+                         gradient_clip_val=max_grad_norm, logger=wandb_logger, precision=precision, checkpoint_callback=checkpoint_callback)
+    trainer.fit(glow_light)
 
 
 if __name__ == "__main__":

@@ -47,7 +47,8 @@ def get_CIFAR10(augment, dataroot, download):
 
     train_transform = transforms.Compose(transformations)
 
-    one_hot_encode = lambda target: F.one_hot(torch.tensor(target), num_classes)
+    def one_hot_encode(target): return F.one_hot(
+        torch.tensor(target), num_classes)
 
     path = Path(dataroot) / "data" / "CIFAR10"
     train_dataset = datasets.CIFAR10(
@@ -81,7 +82,8 @@ def get_SVHN(augment, dataroot, download):
     transformations.extend([transforms.ToTensor(), preprocess])
     transform = transforms.Compose(transformations)
 
-    one_hot_encode = lambda target: F.one_hot(torch.tensor(target), num_classes)
+    def one_hot_encode(target): return F.one_hot(
+        torch.tensor(target), num_classes)
 
     path = Path(dataroot) / "data" / "SVHN"
     train_dataset = datasets.SVHN(
@@ -97,6 +99,41 @@ def get_SVHN(augment, dataroot, download):
         split="test",
         transform=transform,
         target_transform=one_hot_encode,
+        download=download,
+    )
+
+    return image_shape, num_classes, train_dataset, test_dataset
+
+
+def get_CELEBA(augment, dataroot, download):
+    image_shape = (64, 64, 3)
+    num_classes = 40
+    test_transform = transforms.Compose([transforms.ToTensor(), preprocess])
+
+    if augment:
+        transformations = [
+            transforms.RandomAffine(0, translate=(0.1, 0.1)),
+            transforms.RandomHorizontalFlip(),
+        ]
+    else:
+        transformations = []
+    transformations.extend([transforms.ToTensor(), preprocess])
+
+    train_transform = transforms.Compose(transformations)
+    path = Path(dataroot) / "data" / "CELEBA"
+    train_dataset = datasets.CIFAR10(
+        path,
+        split="train",
+        transform=train_transform,
+        target_type="attr",
+        download=download,
+    )
+
+    test_dataset = datasets.CIFAR10(
+        path,
+        split="test",
+        transform=test_transform,
+        target_type="attr",
         download=download,
     )
 

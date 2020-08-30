@@ -1,7 +1,7 @@
-dataset: cifar10
+dataset: celeba
 dataroot: './'
 download: True
-augment: False
+augment: True
 hidden_channels: 512
 K: 32
 L: 3
@@ -14,16 +14,22 @@ y_condition: False
 y_weight: 0.01 # "Weight for class condition loss"
 max_grad_clip: 0 # "Max gradient value (clip above - for off)"
 max_grad_norm: 0 # "Max norm of gradient (clip above - 0 for off)"
-n_workers: 6 # "number of data loading workers"
-batch_size: 64 # "batch size used during training"
-eval_batch_size: 512 # "batch size used during evaluation"
-epochs: 250 # "number of epochs to train for"
+n_workers: 4 # "number of data loading workers"
+batch_size: 16 # "batch size used during training"
+eval_batch_size: 16 # "batch size used during evaluation"
+epochs: 1000 # "number of epochs to train for"
+opt_type: 'AdamW' #name of optimizer
 lr: 5e-5
+use_swa: False #using of Stochastic Weight Averaging
+swa_start: 0 # when start swa, 0 if disabled
+swa_lr: 0 # learning rate of swa, 0 if disabled
 warmup: 5 # "Use this number of epochs to warmup learning rate linearly from zero to learning rate"
 n_init_batches: 8  # "Number of batches to use for Act Norm initialisation"
 cuda: True
-output_dir: "output/"
+output_dir: "./output/"
 fresh: True # "Remove output directory before starting"
-saved_model: "" # "Path to model to load for continuing training"
-saved_optimizer: "" #"Path to optimizer to load for continuing training"
-seed: 0
+saved_model: "./models" # "Path to model to load for continuing training"
+saved_optimizer: "./optimizers" #"Path to optimizer to load for continuing training"
+seed: 666
+precision: 32
+num_gpu: 1
