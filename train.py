@@ -7,8 +7,8 @@ from itertools import islice
 
 import torch
 import torch.nn.functional as F
+from torch.optim.swa_utils import AveragedModel, SWALR
 import torch.optim as optim
-from optim.swa_utils import AveragedModel, SWALR
 import torch.utils.data as data
 
 import pytorch_lightning as pl
