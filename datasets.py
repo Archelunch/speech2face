@@ -106,6 +106,22 @@ def get_SVHN(augment, dataroot, download):
 
 
 def get_CELEBA(augment, dataroot, download):
+    file_list = [
+        # File ID                         MD5 Hash                            Filename
+        ("1Lkz2FpYaopWqDt-v6M8H8DIB1I1AGCzX",
+         "00d2c5bc6d35e252742224ab0c1e8fcb", "img_align_celeba.zip"),
+        ("1a6ce6Z1uSh48ACJhh17J1YEyGTDT9nEV",
+         "75e246fa4810816ffd6ee81facbd244c", "list_attr_celeba.txt"),
+        ("1If6Tlr0TkIlb-fsRVEr5HPZyMb_aTzYS",
+         "32bd1bd63d3c78cd57e08160ec5ed1e2", "identity_CelebA.txt"),
+        ("1uj3mrD6FAEuhbmguGApfefqrQFztc0S4",
+         "00566efa6fedff7a56946cd1c10f1c16", "list_bbox_celeba.txt"),
+        ("13XvEQSgQNhJJOCWA49ybhmhzEdqbbCfT", "cc24ecafdb5b50baae59b03474781f8c",
+         "list_landmarks_align_celeba.txt"),
+        ("1h9xZ5NzHP2mNRPNXcXi2WK11YVKV5GNN",
+         "d32c9cbf5e040fd4025c592c306e6668", "list_eval_partition.txt"),
+    ]
+    datasets.CelebA.file_list = file_list
     image_shape = (64, 64, 3)
     num_classes = 40
     test_transform = transforms.Compose([transforms.ToTensor(), preprocess])
@@ -121,7 +137,7 @@ def get_CELEBA(augment, dataroot, download):
 
     train_transform = transforms.Compose(transformations)
     path = Path(dataroot) / "data" / "CELEBA"
-    train_dataset = datasets.CIFAR10(
+    train_dataset = datasets.CelebA(
         path,
         split="train",
         transform=train_transform,
@@ -129,7 +145,7 @@ def get_CELEBA(augment, dataroot, download):
         download=download,
     )
 
-    test_dataset = datasets.CIFAR10(
+    test_dataset = datasets.CelebA(
         path,
         split="test",
         transform=test_transform,
