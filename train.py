@@ -269,7 +269,7 @@ def main(cfg):
         del temp
         model.cpu()
         torch.cuda.empty_cache()
-        print(torch.cuda.memory_summary())
+        print(torch.cuda.memory_allocated())
 
     glow_light = GlowLighting(model, opt_type, lr, train_dataset, test_dataset,
                               batch_size, eval_batch_size, n_workers, use_swa, swa_lr, y_condition, y_weight, warmup, n_init_batches)
