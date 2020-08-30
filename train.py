@@ -113,30 +113,6 @@ class GlowLighting(pl.LightningModule):
 
         return [optimizer], [scheduler]
 
-    def on_train_start(self):
-        self.model.train()
-
-        init_batches = []
-        init_targets = []
-
-        with torch.no_grad():
-            for batch, target in islice(self.train_dataset, None, self.batch_size*self.n_init_batches):
-                init_batches.append(batch)
-                init_targets.append(target)
-
-            init_batches = torch.cat(init_batches).half().cuda()
-
-            assert init_batches.shape[0] == self.n_init_batches * \
-                self.batch_size
-
-            if self.y_condition:
-                init_targets = torch.cat(init_targets).cuda()
-            else:
-                init_targets = None
-
-            self.forward(init_batches, init_targets)
-        print("Finished initialization")
-
     def train_dataloader(self):
         train_loader = data.DataLoader(
             self.train_dataset,
@@ -257,6 +233,29 @@ def main(cfg):
         learn_top,
         y_condition,
     )
+    # TODO move to method
+    model.train()
+    init_batches = []
+    init_targets = []
+
+    with torch.no_grad():
+        for batch, target in islice(rain_dataset, None, batch_size*n_init_batches):
+            init_batches.append(batch)
+            init_targets.append(target)
+
+        init_batches = torch.cat(init_batches).cuda()
+
+        assert init_batches.shape[0] == n_init_batches * \
+            batch_size
+
+        if y_condition:
+            init_targets = torch.cat(init_targets).cuda()
+        else:
+            init_targets = None
+
+        model.forward(init_batches, init_targets)
+        print("Finished initialization")
+    # END
 
     glow_light = GlowLighting(model, opt_type, lr, train_dataset, test_dataset,
                               batch_size, eval_batch_size, n_workers, use_swa, swa_lr, y_condition, y_weight, warmup, n_init_batches)
