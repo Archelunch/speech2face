@@ -245,8 +245,7 @@ def main(cfg):
 
         init_batches = torch.cat(init_batches).cuda()
 
-        assert init_batches.shape[0] == n_init_batches * \
-            batch_size
+        assert init_batches.shape[0] == n_init_batches * batch_size
 
         if y_condition:
             init_targets = torch.cat(init_targets).cuda()
