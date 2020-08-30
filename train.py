@@ -234,6 +234,7 @@ def main(cfg):
         y_condition,
     )
     # TODO move to method
+    model.cuda()
     model.train()
     train_loader = data.DataLoader(
         train_dataset,
@@ -265,6 +266,7 @@ def main(cfg):
     del init_batches
     del init_targets
     del train_loader
+    model.cpu()
     # END
 
     glow_light = GlowLighting(model, opt_type, lr, train_dataset, test_dataset,
