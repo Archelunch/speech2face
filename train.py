@@ -7,19 +7,22 @@ from itertools import islice
 
 import torch
 import torch.nn.functional as F
-from torch.optim.swa_utils import AveragedModel, SWALR
+
+# from torch.optim.swa_utils import AveragedModel, SWALR
 import torch.optim as optim
 import torch.utils.data as data
 import torch.autograd.profiler as profiler
 
 import pytorch_lightning as pl
+import wandb
 from pytorch_lightning.loggers import WandbLogger
 from pytorch_lightning.callbacks import ModelCheckpoint
 
-import wandb
 
-from datasets import get_CIFAR10, get_SVHN, get_CELEBA
+from datasets import get_CIFAR10, get_SVHN, get_CELEBA, postprocess
 from model import Glow
+
+from torchvision.utils import make_grid
 
 
 def check_manual_seed(seed):
@@ -77,7 +80,24 @@ def compute_loss_y(nll, y_logits, y_weight, y, multi_class, reduction="mean"):
 
 
 class GlowLighting(pl.LightningModule):
-    def __init__(self, model, opt_type, lr, train_dataset, test_dataset, batch_size, eval_batch_size, n_workers, use_swa, swa_lr, y_condition, y_weight, warmup, n_init_batches, multi_class=False):
+    def __init__(
+        self,
+        model,
+        opt_type,
+        lr,
+        train_dataset,
+        test_dataset,
+        batch_size,
+        eval_batch_size,
+        n_workers,
+        use_swa,
+        swa_lr,
+        y_condition,
+        y_weight,
+        warmup,
+        n_init_batches,
+        multi_class=False,
+    ):
         super().__init__()
         self.model = model
         self.opt_type = opt_type
@@ -96,21 +116,23 @@ class GlowLighting(pl.LightningModule):
         self.n_init_batches = n_init_batches
 
     def forward(self, x=None, y_onehot=None, z=None, temperature=None, reverse=False):
-        return self.model.forward(x=x, y_onehot=y_onehot, z=z, temperature=temperature, reverse=reverse)
+        return self.model.forward(
+            x=x, y_onehot=y_onehot, z=z, temperature=temperature, reverse=reverse
+        )
 
     def configure_optimizers(self):
         """TODO SWA"""
         if self.opt_type == "AdamW":
             optimizer = optim.AdamW(self.parameters(), lr=self.lr)
 
-        def lr_lambda(epoch): return min(1.0, (epoch + 1) / self.warmup)  # noqa
+        def lr_lambda(epoch):
+            return min(1.0, (epoch + 1) / self.warmup)  # noqa
 
-        scheduler = optim.lr_scheduler.LambdaLR(
-            optimizer, lr_lambda=lr_lambda)
+        scheduler = optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lr_lambda)
 
-        if self.use_swa:
-            swa_model = AveragedModel(self.model)
-            swa_scheduler = SWALR(optimizer, swa_lr=self.swa_lr)
+        # if self.use_swa:
+        # swa_model = AveragedModel(self.model)
+        # swa_scheduler = SWALR(optimizer, swa_lr=self.swa_lr
 
         return [optimizer], [scheduler]
 
@@ -138,18 +160,31 @@ class GlowLighting(pl.LightningModule):
         x, y = batch
         if self.y_condition:
             z, nll, y_logits = self.forward(x, y)
-            losses = compute_loss_y(
-                nll, y_logits, self.y_weight, y, self.multi_class)
+            losses = compute_loss_y(nll, y_logits, self.y_weight, y, self.multi_class)
         else:
             z, nll, y_logits = self.forward(x, None)
             losses = compute_loss(nll)
 
         return {
-            'loss': losses["total_loss"],
-            'log': {
-                'train_loss': losses["total_loss"]
-            }
+            "loss": losses["total_loss"],
+            "log": {"train_loss": losses["total_loss"]},
         }
+
+    def sample(self):
+        with torch.no_grad():
+            if self.y_condition:
+                y = torch.eye(num_classes)
+                y = y.repeat(self.batch_size // num_classes + 1)
+                y = y[:32, :].to(device)  # number hardcoded in model for now
+            else:
+                y = None
+
+            images = self.model(y_onehot=y, temperature=1, reverse=True)
+        return (
+            make_grid(images.cpu()[:30], nrow=6, normalize=True)
+            .permute(1, 2, 0)
+            .numpy()
+        )
 
     def validation_step(self, batch, batch_nb):
         x, y = batch
@@ -161,9 +196,17 @@ class GlowLighting(pl.LightningModule):
         else:
             z, nll, y_logits = self.forward(x, None)
             losses = compute_loss(nll, reduction="none")
-        return {
-            'val_loss': losses["total_loss"],
-        }
+        if batch_nb == 0:
+            images = self.sample()
+            print("returning images")
+            return {
+                "val_loss": losses["total_loss"],
+                "log": {"images": [wandb.Image(images, caption="samples")]},
+            }
+        else:
+            return {
+                "val_loss": losses["total_loss"],
+            }
 
 
 @hydra.main(config_path="config.yaml")
@@ -270,17 +313,44 @@ def main(cfg):
         model.cpu()
         torch.cuda.empty_cache()
         print(torch.cuda.memory_summary())
+
     init_act()
-    glow_light = GlowLighting(model, opt_type, lr, train_dataset, test_dataset,
-                              batch_size, eval_batch_size, n_workers, use_swa, swa_lr, y_condition, y_weight, warmup, n_init_batches)
+    glow_light = GlowLighting(
+        model,
+        opt_type,
+        lr,
+        train_dataset,
+        test_dataset,
+        batch_size,
+        eval_batch_size,
+        n_workers,
+        use_swa,
+        swa_lr,
+        y_condition,
+        y_weight,
+        warmup,
+        n_init_batches,
+    )
 
     wandb_logger = WandbLogger(
-        name='Glow experiment with faces', project='glow-experiments')
+        name="Glow experiment with faces", project="glow-experiments"
+    )
 
     checkpoint_callback = ModelCheckpoint(
-        filepath=os.path.join(output_dir, saved_model), verbose=True, monitor='val_loss', mode='min')
-    trainer = pl.Trainer(max_epochs=epochs, gpus=num_gpu,
-                         gradient_clip_val=max_grad_norm, logger=wandb_logger, precision=precision, checkpoint_callback=checkpoint_callback, accumulate_grad_batches=accumulate_grad_batches)
+        filepath=os.path.join(output_dir, saved_model),
+        verbose=True,
+        monitor="val_loss",
+        mode="min",
+    )
+    trainer = pl.Trainer(
+        max_epochs=epochs,
+        gpus=num_gpu,
+        gradient_clip_val=max_grad_norm,
+        logger=wandb_logger,
+        precision=precision,
+        checkpoint_callback=checkpoint_callback,
+        accumulate_grad_batches=accumulate_grad_batches,
+    )
     trainer.fit(glow_light)
 
 
