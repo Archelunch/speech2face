@@ -196,17 +196,15 @@ class GlowLighting(pl.LightningModule):
         else:
             z, nll, y_logits = self.forward(x, None)
             losses = compute_loss(nll, reduction="none")
-        if batch_nb == 0:
-            images = self.sample()
-            print("returning images")
-            return {
-                "val_loss": losses["total_loss"],
-                "log": {"images": [wandb.Image(images, caption="samples")]},
-            }
-        else:
-            return {
-                "val_loss": losses["total_loss"],
-            }
+
+        return {"val_loss": losses["total_loss"]}
+
+    def validation_epoch_end(self, validation_step_outputs):
+        images = self.sample()
+        print("returning images")
+        return {
+            "log": {"images": [wandb.Image(images, caption="samples")]},
+        }
 
 
 @hydra.main(config_path="config.yaml")
@@ -350,6 +348,7 @@ def main(cfg):
         precision=precision,
         checkpoint_callback=checkpoint_callback,
         accumulate_grad_batches=accumulate_grad_batches,
+        val_check_interval=0.1,
     )
     trainer.fit(glow_light)
 

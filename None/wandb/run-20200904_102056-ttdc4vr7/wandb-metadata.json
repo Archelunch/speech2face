@@ -1,0 +1,33 @@
+{
+    "root": "/home/dev/other/speech2face",
+    "program": "train.py",
+    "git": {
+        "remote": "https://github.com/Archelunch/speech2face.git",
+        "commit": "b9f10ff74b49d7ecd0732e40bf6cab0d40f1ccf4"
+    },
+    "email": "geksut@gmail.com",
+    "startedAt": "2020-09-04T10:21:01.175898",
+    "host": "9c196e37ca1d",
+    "username": "root",
+    "executable": "/opt/conda/bin/python3",
+    "os": "Linux-5.3.0-28-generic-x86_64-with-debian-buster-sid",
+    "python": "3.7.7",
+    "gpu": "TITAN RTX",
+    "gpu_count": 2,
+    "cpu_count": 80,
+    "args": [
+        "download=True",
+        "n_init_batches=8",
+        "eval_batch_size=64",
+        "batch_size=12",
+        "accumulate_grad_batches=8",
+        "precision=16"
+    ],
+    "state": "killed",
+    "jobType": null,
+    "mode": "run",
+    "name": "Glow experiment with faces",
+    "project": "glow-experiments",
+    "heartbeatAt": "2020-09-06T11:36:46.567148",
+    "exitcode": 255
+}
