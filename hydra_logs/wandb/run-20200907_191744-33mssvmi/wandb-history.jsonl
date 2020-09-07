@@ -1,5 +1,0 @@
-{"global_step": 12, "train_loss": 5.294241905212402, "epoch": 0, "_runtime": 105.31260681152344, "_timestamp": 1599506339.4408236, "_step": 0}
-{"global_step": 24, "train_loss": 4.965606212615967, "epoch": 0, "_runtime": 152.12568163871765, "_timestamp": 1599506386.2538984, "_step": 1}
-{"global_step": 37, "train_loss": 4.642479419708252, "epoch": 0, "_runtime": 199.0645730495453, "_timestamp": 1599506433.1927898, "_step": 2}
-{"global_step": 49, "train_loss": 4.605192184448242, "epoch": 0, "_runtime": 246.41267156600952, "_timestamp": 1599506480.5408883, "_step": 3}
-{"global_step": 62, "train_loss": 4.3706440925598145, "epoch": 0, "_runtime": 292.7630476951599, "_timestamp": 1599506526.8912644, "_step": 4}

@@ -1,1 +1,0 @@
-{"epoch": 0, "_runtime": 529.9617474079132, "_step": 10, "global_step": 112, "_timestamp": 1599508199.9429286, "train_loss": 3.126467227935791, "images": {"width": 206, "height": 172, "format": "png", "count": 1, "_type": "images", "captions": ["samples"]}}
