@@ -1,15 +1,15 @@
-dataset: celeba
+dataset: cifar10
 dataroot: '../../../'
 download: True
 augment: True
 hidden_channels: 512
-K: 48
-L: 4
+K: 32
+L: 3
 actnorm_scale: 1.0
 flow_permutation: invconv # ["invconv", "shuffle", "reverse"]
 flow_coupling: affine  # choices=["additive", "affine"]
-LU_decomposed: False
-learn_top: False
+LU_decomposed: True
+learn_top: True
 y_condition: False
 y_weight: 0.01 # "Weight for class condition loss"
 max_grad_clip: 0.5 # "Max gradient value (clip above - for off)"
@@ -28,7 +28,7 @@ n_init_batches: 8  # "Number of batches to use for Act Norm initialisation"
 cuda: True
 output_dir: "./output/"
 fresh: True # "Remove output directory before starting"
-saved_model: "./models" # "Path to model to load for continuing training"
+saved_model: "./weights/glow/glow_affine_coupling.pth" # "Path to model to load for continuing training"
 saved_optimizer: "./optimizers" #"Path to optimizer to load for continuing training"
 seed: 666
 precision: 16
@@ -38,4 +38,4 @@ accumulate_grad_batches: 4
 # specify hidra output directory
 hydra:
   run:
-    dir: ./hydra_logs/${USER}/
+    dir: ./hydra_logs/

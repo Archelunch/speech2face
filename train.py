@@ -181,7 +181,7 @@ class GlowLighting(pl.LightningModule):
 
             images = self.model(y_onehot=y, temperature=1, reverse=True)
         return (
-            make_grid(images.cpu()[:30], nrow=6, normalize=True)
+            make_grid(images.cpu()[:30], nrow=6, normalize=False)
             .permute(1, 2, 0)
             .numpy()
         )
@@ -205,6 +205,14 @@ class GlowLighting(pl.LightningModule):
         return {
             "log": {"images": [wandb.Image(images, caption="samples")]},
         }
+    
+#     def on_epoch_start(self):
+#         images = self.sample()
+#         print("returning images")
+#         return {
+#             "log": {"images": [wandb.Image(images, caption="samples")]},
+#         }
+        
 
 
 @hydra.main(config_path="config.yaml")
@@ -275,6 +283,10 @@ def main(cfg):
         learn_top,
         y_condition,
     )
+    
+    if cfg.saved_model:
+        model.load_state_dict(torch.load(cfg.saved_model))
+        model.set_actnorm_init()
 
     def init_act():
         model.cuda()

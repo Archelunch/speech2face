@@ -1,0 +1,18 @@
+[2020-09-07 19:17:44,486][lightning][INFO] - GPU available: True, used: True
+[2020-09-07 19:17:44,487][lightning][INFO] - TPU available: False, using: 0 TPU cores
+[2020-09-07 19:17:44,487][lightning][INFO] - CUDA_VISIBLE_DEVICES: [0]
+[2020-09-07 19:17:44,489][lightning][INFO] - Using native 16bit precision.
+[2020-09-07 19:18:07,363][lightning][INFO] - 
+  | Name  | Type | Params
+-------------------------------
+0 | model | Glow | 44 M  
+[2020-09-07 19:22:25,060][lightning][INFO] - Saving latest checkpoint..
+[2020-09-07 19:41:52,390][lightning][INFO] - GPU available: True, used: True
+[2020-09-07 19:41:52,390][lightning][INFO] - TPU available: False, using: 0 TPU cores
+[2020-09-07 19:41:52,390][lightning][INFO] - CUDA_VISIBLE_DEVICES: [0]
+[2020-09-07 19:41:52,391][lightning][INFO] - Using native 16bit precision.
+[2020-09-07 19:42:15,200][lightning][INFO] - 
+  | Name  | Type | Params
+-------------------------------
+0 | model | Glow | 44 M  
+[2020-09-07 19:50:10,587][lightning][INFO] - Saving latest checkpoint..
