@@ -253,6 +253,8 @@ def main(cfg):
     precision = cfg.precision
     num_gpu = cfg.num_gpu
     accumulate_grad_batches = cfg.accumulate_grad_batches
+    
+    os.environ['WANDB_API_KEY'] = cfg.wandb_key
 
     try:
         os.makedirs(cfg.output_dir)
