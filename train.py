@@ -200,9 +200,11 @@ class GlowLighting(pl.LightningModule):
         return {"val_loss": losses["total_loss"]}
 
     def validation_epoch_end(self, validation_step_outputs):
+        val_loss = torch.stack([torch.Tensor([x['val_loss']]) for x in validation_step_outputs]).mean()
         images = self.sample()
         print("returning images")
         return {
+            'val_loss': val_loss,
             "log": {"images": [wandb.Image(images, caption="samples")]},
         }
     
