@@ -285,10 +285,6 @@ def main(cfg):
         learn_top,
         y_condition,
     )
-    
-    if cfg.saved_model:
-        model.load_state_dict(torch.load(cfg.saved_model))
-        model.set_actnorm_init()
 
     def init_act():
         model.cuda()
@@ -325,8 +321,13 @@ def main(cfg):
         model.cpu()
         torch.cuda.empty_cache()
         print(torch.cuda.memory_summary())
-
-    init_act()
+        
+    if cfg.saved_model:
+        model.load_state_dict(torch.load(cfg.saved_model))
+        model.set_actnorm_init()
+    else:
+        init_act()
+        
     glow_light = GlowLighting(
         model,
         opt_type,
