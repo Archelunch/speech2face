@@ -28,8 +28,8 @@ n_init_batches: 8  # "Number of batches to use for Act Norm initialisation"
 cuda: True
 output_dir: "./output/"
 fresh: True # "Remove output directory before starting"
-saved_model: "./weights/glow/glow_affine_coupling.pth" # "Path to model to load for continuing training"
-saved_optimizer: "./optimizers" #"Path to optimizer to load for continuing training"
+saved_model: ""  # "Path to model to load for continuing training"
+saved_optimizer: "" #"Path to optimizer to load for continuing training"
 seed: 666
 precision: 16
 num_gpu: 1
