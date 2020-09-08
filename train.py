@@ -156,7 +156,7 @@ def main(cfg):
         del temp
         model.cpu()
         torch.cuda.empty_cache()
-        print(torch.cuda.memory_summary())
+
         
     init_act()
         
