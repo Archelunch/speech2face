@@ -198,9 +198,11 @@ def main(cfg):
         checkpoint_callback=checkpoint_callback,
         accumulate_grad_batches=accumulate_grad_batches,
         val_check_interval=0.1,
-        resume_from_checkpoint=saved_checkpoint
-
+        resume_from_checkpoint=saved_checkpoint,
+        auto_select_gpus=True,
+        auto_scale_batch_size='binsearch'
     )
+    trainer.tune(glow_light)
     trainer.fit(glow_light)
 
 
