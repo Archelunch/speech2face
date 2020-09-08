@@ -60,6 +60,7 @@ def main(cfg):
     eval_batch_size = cfg.eval_batch_size
     epochs = cfg.epochs
     saved_model = cfg.saved_model
+    saved_checkpoint = cfg.saved_checkpoint
     seed = cfg.seed
     hidden_channels = cfg.hidden_channels
     K = cfg.K
@@ -82,11 +83,12 @@ def main(cfg):
     cuda = cfg.cuda
     n_init_batches = cfg.n_init_batches
     output_dir = cfg.output_dir
-    saved_optimizer = cfg.saved_optimizer
     warmup = cfg.warmup
     precision = cfg.precision
     num_gpu = cfg.num_gpu
     accumulate_grad_batches = cfg.accumulate_grad_batches
+    db = cfg.db
+    num_nodes = cfg.num_nodes
     
     os.environ['WANDB_API_KEY'] = cfg.wandb_key
 
@@ -156,11 +158,7 @@ def main(cfg):
         torch.cuda.empty_cache()
         print(torch.cuda.memory_summary())
         
-    if cfg.saved_model:
-        model.load_state_dict(torch.load(cfg.saved_model))
-        model.set_actnorm_init()
-    else:
-        init_act()
+    init_act()
         
     glow_light = GlowLighting(
         model,
@@ -189,15 +187,19 @@ def main(cfg):
         monitor="val_loss",
         mode="min",
     )
-    trainer = pl.Trainer(
+    trainer = pl.Trainer(   
         max_epochs=epochs,
         gpus=num_gpu,
+        num_nodes=num_nodes,
+        distributed_backend=db,
         gradient_clip_val=max_grad_norm,
         logger=wandb_logger,
         precision=precision,
         checkpoint_callback=checkpoint_callback,
         accumulate_grad_batches=accumulate_grad_batches,
         val_check_interval=0.1,
+        resume_from_checkpoint=saved_checkpoint
+
     )
     trainer.fit(glow_light)
 
