@@ -92,17 +92,6 @@ def main(cfg):
     
     os.environ['WANDB_API_KEY'] = cfg.wandb_key
 
-    try:
-        os.makedirs(cfg.output_dir)
-    except FileExistsError:
-        if cfg.fresh:
-            shutil.rmtree(cfg.output_dir)
-            os.makedirs(cfg.output_dir)
-        if (not os.path.isdir(cfg.output_dir)) or (len(os.listdir(cfg.output_dir)) > 0):
-            raise FileExistsError(
-                "Please provide a path to a non-existing or empty directory. Alternatively, pass the --fresh flag."  # noqa
-            )
-
     check_manual_seed(seed)
 
     ds = check_dataset(dataset, dataroot, augment, download)
@@ -182,7 +171,7 @@ def main(cfg):
     )
 
     checkpoint_callback = ModelCheckpoint(
-        filepath=os.path.join(output_dir, saved_model),
+        filepath=output_dir,
         verbose=True,
         monitor="val_loss",
         mode="min",
