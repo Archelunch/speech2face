@@ -112,6 +112,7 @@ def main(cfg):
     )
 
     def init_act():
+        print("Started init")
         model.cuda()
         model.train()
         train_loader = data.DataLoader(
@@ -123,12 +124,12 @@ def main(cfg):
         )
         init_batches = []
         init_targets = []
-
+        print("Started loop")
         with torch.no_grad():
             for batch, target in islice(train_loader, None, n_init_batches):
                 init_batches.append(batch)
                 init_targets.append(target)
-
+            print("Finished loop")
             init_batches = torch.cat(init_batches).cuda()
             assert init_batches.shape[0] == n_init_batches * batch_size
 
