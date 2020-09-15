@@ -205,14 +205,14 @@ class GlowLighting(pl.LightningModule):
         return {
             "log": {"images": [wandb.Image(images, caption="samples")]},
         }
-    
+
 #     def on_epoch_start(self):
 #         images = self.sample()
 #         print("returning images")
 #         return {
 #             "log": {"images": [wandb.Image(images, caption="samples")]},
 #         }
-        
+
 
 
 @hydra.main(config_path="config.yaml")
@@ -283,8 +283,8 @@ def main(cfg):
         learn_top,
         y_condition,
     )
-    
-    if cfg.saved_model:
+
+    if  os.path.exists(cfg.saved_model):
         model.load_state_dict(torch.load(cfg.saved_model))
         model.set_actnorm_init()
 
