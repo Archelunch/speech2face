@@ -48,7 +48,6 @@ def check_dataset(dataset, dataroot, augment, download):
     return input_size, num_classes, train_dataset, test_dataset
 
 
-
 @hydra.main(config_path="config.yaml")
 def main(cfg):
 
@@ -89,7 +88,7 @@ def main(cfg):
     accumulate_grad_batches = cfg.accumulate_grad_batches
     db = cfg.db
     num_nodes = cfg.num_nodes
-    
+
     os.environ['WANDB_API_KEY'] = cfg.wandb_key
 
     check_manual_seed(seed)
@@ -147,9 +146,8 @@ def main(cfg):
         model.cpu()
         torch.cuda.empty_cache()
 
-        
     init_act()
-        
+
     glow_light = GlowLighting(
         model,
         opt_type,
@@ -177,7 +175,7 @@ def main(cfg):
         monitor="val_loss",
         mode="min",
     )
-    trainer = pl.Trainer(   
+    trainer = pl.Trainer(
         max_epochs=epochs,
         gpus=num_gpu,
         num_nodes=num_nodes,
@@ -189,10 +187,10 @@ def main(cfg):
         accumulate_grad_batches=accumulate_grad_batches,
         val_check_interval=0.1,
         resume_from_checkpoint=saved_checkpoint,
-        #auto_select_gpus=True,
-        #auto_scale_batch_size='binsearch'
+        auto_select_gpus=True,
+        auto_scale_batch_size='binsearch'
     )
-    #trainer.tune(glow_light)
+    trainer.tune(glow_light)
     trainer.fit(glow_light)
 
 
