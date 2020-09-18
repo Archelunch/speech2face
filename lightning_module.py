@@ -5,6 +5,7 @@ from torchvision.utils import make_grid
 
 import pytorch_lightning as pl
 
+from ranger import Ranger
 import wandb
 
 def compute_loss(nll, reduction="mean"):
@@ -83,18 +84,18 @@ class GlowLighting(pl.LightningModule):
     def configure_optimizers(self):
         """TODO SWA"""
         if self.opt_type == "AdamW":
-            optimizer = optim.Adamax(self.parameters(), lr=self.lr, weight_decay=5e-5)
+            optimizer = Ranger(self.parameters(), lr=self.lr, weight_decay=5e-5)
 
-        def lr_lambda(epoch):
-            return min(1.0, (epoch + 1) / self.warmup)  # noqa
+        # def lr_lambda(epoch):
+        #     return min(1.0, (epoch + 1) / self.warmup)  # noqa
 
-        scheduler = optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lr_lambda)
+        # scheduler = optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lr_lambda)
 
         # if self.use_swa:
         # swa_model = AveragedModel(self.model)
         # swa_scheduler = SWALR(optimizer, swa_lr=self.swa_lr
 
-        return [optimizer], [scheduler]
+        return [optimizer]#, [scheduler]
 
     def train_dataloader(self):
         train_loader = data.DataLoader(
