@@ -165,5 +165,6 @@ class GlowLighting(pl.LightningModule):
         print("returning images")
         return {
             'val_loss': val_loss,
-            "log": {"images": [wandb.Image(images, caption="samples")]},
+            "log": {"images": [wandb.Image(images, caption="samples")],
+                    "val_loss":val_loss},
         }

@@ -122,10 +122,10 @@ def get_CELEBA(augment, dataroot, download):
          "d32c9cbf5e040fd4025c592c306e6668", "list_eval_partition.txt"),
     ]
     datasets.CelebA.file_list = file_list
-    image_shape = (64, 64, 3)
+    image_shape = (128, 128, 3)
     num_classes = 40
     test_transform = transforms.Compose(
-        [transforms.Resize((64, 64)), transforms.ToTensor(), preprocess])
+        [transforms.Resize((128, 128)), transforms.ToTensor(), preprocess])
 
     if augment:
         transformations = [
@@ -135,7 +135,7 @@ def get_CELEBA(augment, dataroot, download):
     else:
         transformations = []
     transformations.extend(
-        [transforms.Resize((64, 64)), transforms.ToTensor(), preprocess])
+        [transforms.Resize((128, 128)), transforms.ToTensor(), preprocess])
 
     train_transform = transforms.Compose(transformations)
     path = Path(dataroot) / "data" / "CELEBA"
