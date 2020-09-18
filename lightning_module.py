@@ -83,7 +83,7 @@ class GlowLighting(pl.LightningModule):
     def configure_optimizers(self):
         """TODO SWA"""
         if self.opt_type == "AdamW":
-            optimizer = optim.AdamW(self.parameters(), lr=self.lr)
+            optimizer = optim.Adamax(self.parameters(), lr=self.lr, weight_decay=5e-5)
 
         def lr_lambda(epoch):
             return min(1.0, (epoch + 1) / self.warmup)  # noqa
