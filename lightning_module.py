@@ -112,7 +112,7 @@ class GlowLighting(pl.LightningModule):
             batch_size=self.eval_batch_size,
             shuffle=False,
             num_workers=self.n_workers,
-            drop_last=False,
+            drop_last=True,
         )
         return test_loader
 
