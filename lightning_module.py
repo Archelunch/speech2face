@@ -8,6 +8,7 @@ import pytorch_lightning as pl
 from ranger import Ranger
 import wandb
 
+
 def compute_loss(nll, reduction="mean"):
     if reduction == "mean":
         losses = {"nll": torch.mean(nll)}
@@ -39,6 +40,7 @@ def compute_loss_y(nll, y_logits, y_weight, y, multi_class, reduction="mean"):
     losses["total_loss"] = losses["nll"] + y_weight * loss_classes
 
     return losses
+
 
 class GlowLighting(pl.LightningModule):
     def __init__(
@@ -84,7 +86,8 @@ class GlowLighting(pl.LightningModule):
     def configure_optimizers(self):
         """TODO SWA"""
         if self.opt_type == "AdamW":
-            optimizer = Ranger(self.parameters(), lr=self.lr, weight_decay=5e-5)
+            optimizer = Ranger(self.parameters(),
+                               lr=self.lr, weight_decay=5e-5)
 
         # def lr_lambda(epoch):
         #     return min(1.0, (epoch + 1) / self.warmup)  # noqa
@@ -95,7 +98,7 @@ class GlowLighting(pl.LightningModule):
         # swa_model = AveragedModel(self.model)
         # swa_scheduler = SWALR(optimizer, swa_lr=self.swa_lr
 
-        return [optimizer]#, [scheduler]
+        return [optimizer]  # , [scheduler]
 
     def train_dataloader(self):
         train_loader = data.DataLoader(
@@ -121,7 +124,8 @@ class GlowLighting(pl.LightningModule):
         x, y = batch
         if self.y_condition:
             z, nll, y_logits = self.forward(x, y)
-            losses = compute_loss_y(nll, y_logits, self.y_weight, y, self.multi_class)
+            losses = compute_loss_y(
+                nll, y_logits, self.y_weight, y, self.multi_class)
         else:
             z, nll, y_logits = self.forward(x, None)
             losses = compute_loss(nll)
@@ -140,7 +144,7 @@ class GlowLighting(pl.LightningModule):
             else:
                 y = None
 
-            images = self.model(y_onehot=y, temperature=1, reverse=True)
+            images = self.model(y_onehot=y, temperature=0.7, reverse=True)
         return (
             make_grid(images.cpu()[:30], nrow=6, normalize=False)
             .permute(1, 2, 0)
@@ -161,11 +165,12 @@ class GlowLighting(pl.LightningModule):
         return {"val_loss": losses["total_loss"]}
 
     def validation_epoch_end(self, validation_step_outputs):
-        val_loss = torch.stack([x['val_loss'] for x in validation_step_outputs]).mean()
+        val_loss = torch.stack([x['val_loss']
+                                for x in validation_step_outputs]).mean()
         images = self.sample()
         print("returning images")
         return {
             'val_loss': val_loss,
             "log": {"images": [wandb.Image(images, caption="samples")],
-                    "val_loss":val_loss},
+                    "val_loss": val_loss},
         }
