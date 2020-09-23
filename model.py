@@ -168,7 +168,7 @@ class FlowNet(nn.Module):
                 )
                 self.output_shapes.append([-1, C, H, W])
 
-            3. Split2d
+            # 3. Split2d
             if i < L - 1:
                 self.layers.append(Split2d(num_channels=C))
                 self.output_shapes.append([-1, C // 2, H, W])
