@@ -1,4 +1,3 @@
-import hydra
 import os
 import json
 import shutil
@@ -13,6 +12,7 @@ import torch.optim as optim
 import torch.utils.data as data
 import torch.autograd.profiler as profiler
 
+from omegaconf import OmegaConf
 import pytorch_lightning as pl
 import wandb
 from pytorch_lightning.loggers import WandbLogger
@@ -48,7 +48,7 @@ def check_dataset(dataset, dataroot, augment, download):
     return input_size, num_classes, train_dataset, test_dataset
 
 
-@hydra.main(config_path="config.yaml")
+cfg = OmegaConf.load("config_test.yaml")
 def main(cfg):
 
     dataset = cfg.dataset
@@ -182,7 +182,7 @@ def main(cfg):
         distributed_backend=db,
         gradient_clip_val=max_grad_norm,
         logger=wandb_logger,
-        precision=precision,
+        #precision=precision,
         checkpoint_callback=checkpoint_callback,
         accumulate_grad_batches=accumulate_grad_batches,
         val_check_interval=0.2,
@@ -193,4 +193,4 @@ def main(cfg):
 
 
 if __name__ == "__main__":
-    main()
+    main(cfg)

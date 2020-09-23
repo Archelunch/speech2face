@@ -284,6 +284,12 @@ class Split2d(nn.Module):
         return split_feature(h, "cross")
 
     def forward(self, input, logdet=0.0, reverse=False, temperature=None):
+#         print('Call forward')
+#         if reverse and temperature is None:
+#             print('Reverse & T is none')
+#             z1 = input
+#             z2 = z1 #torch.zeros_like(z1)
+#             return torch.cat((z1, z2), dim=1), logdet
         if reverse:
             z1 = input
             mean, logs = self.split2d_prior(z1)
