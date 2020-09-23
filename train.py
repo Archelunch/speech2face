@@ -166,7 +166,7 @@ def main(cfg):
     )
 
     wandb_logger = WandbLogger(
-        name="Glow experiment with faces", project="glow-experiments"
+        name="Glow experiment with faces without Split2D", project="glow-experiments"
     )
 
     checkpoint_callback = ModelCheckpoint(
@@ -186,7 +186,7 @@ def main(cfg):
         checkpoint_callback=checkpoint_callback,
         accumulate_grad_batches=accumulate_grad_batches,
         val_check_interval=0.2,
-        resume_from_checkpoint=saved_checkpoint,
+        # resume_from_checkpoint=saved_checkpoint,
         auto_select_gpus=True,
     )
     trainer.fit(glow_light)

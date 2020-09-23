@@ -46,8 +46,10 @@ class FlowStep(nn.Module):
 
         # 2. permute
         if flow_permutation == "invconv":
-            self.invconv = InvertibleConv1x1(in_channels, LU_decomposed=LU_decomposed)
-            self.flow_permutation = lambda z, logdet, rev: self.invconv(z, logdet, rev)
+            self.invconv = InvertibleConv1x1(
+                in_channels, LU_decomposed=LU_decomposed)
+            self.flow_permutation = lambda z, logdet, rev: self.invconv(
+                z, logdet, rev)
         elif flow_permutation == "shuffle":
             self.shuffle = Permute2d(in_channels, shuffle=True)
             self.flow_permutation = lambda z, logdet, rev: (
@@ -63,9 +65,11 @@ class FlowStep(nn.Module):
 
         # 3. coupling
         if flow_coupling == "additive":
-            self.block = get_block(in_channels // 2, in_channels // 2, hidden_channels)
+            self.block = get_block(
+                in_channels // 2, in_channels // 2, hidden_channels)
         elif flow_coupling == "affine":
-            self.block = get_block(in_channels // 2, in_channels, hidden_channels)
+            self.block = get_block(
+                in_channels // 2, in_channels, hidden_channels)
 
     def forward(self, input, logdet=None, reverse=False):
         if not reverse:
@@ -165,10 +169,10 @@ class FlowNet(nn.Module):
                 self.output_shapes.append([-1, C, H, W])
 
             # 3. Split2d
-            if i < L - 1:
-                self.layers.append(Split2d(num_channels=C))
-                self.output_shapes.append([-1, C // 2, H, W])
-                C = C // 2
+            # if i < L - 1:
+            #     self.layers.append(Split2d(num_channels=C))
+            #     self.output_shapes.append([-1, C // 2, H, W])
+            #     C = C // 2
 
     def forward(self, input, logdet=0.0, reverse=False, temperature=None):
         if reverse:
@@ -184,7 +188,8 @@ class FlowNet(nn.Module):
     def decode(self, z, temperature=None):
         for layer in reversed(self.layers):
             if isinstance(layer, Split2d):
-                z, logdet = layer(z, logdet=0, reverse=True, temperature=temperature)
+                z, logdet = layer(z, logdet=0, reverse=True,
+                                  temperature=temperature)
             else:
                 z, logdet = layer(z, logdet=0, reverse=True)
         return z
