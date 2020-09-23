@@ -66,7 +66,7 @@ class FlowStep(nn.Module):
         # 3. coupling
         if flow_coupling == "additive":
             self.block = get_block(
-                in_channels // 4, in_channels // 4, hidden_channels)
+                in_channels // 2, in_channels // 2, hidden_channels)
         elif flow_coupling == "affine":
             self.block = get_block(
                 in_channels // 2, in_channels, hidden_channels)
