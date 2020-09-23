@@ -66,7 +66,7 @@ class FlowStep(nn.Module):
         # 3. coupling
         if flow_coupling == "additive":
             self.block = get_block(
-                in_channels // 2, in_channels // 2, hidden_channels)
+                in_channels // 4, in_channels // 4, hidden_channels)
         elif flow_coupling == "affine":
             self.block = get_block(
                 in_channels // 2, in_channels, hidden_channels)
@@ -158,7 +158,7 @@ class FlowNet(nn.Module):
             for _ in range(K):
                 self.layers.append(
                     FlowStep(
-                        in_channels=C // 2,
+                        in_channels=C,
                         hidden_channels=hidden_channels,
                         actnorm_scale=actnorm_scale,
                         flow_permutation=flow_permutation,
@@ -166,7 +166,7 @@ class FlowNet(nn.Module):
                         LU_decomposed=LU_decomposed,
                     )
                 )
-                self.output_shapes.append([-1, C // 2, H, W])
+                self.output_shapes.append([-1, C, H, W])
             if i < L - 1:
                 C = C // 2
 
