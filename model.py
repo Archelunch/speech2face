@@ -12,6 +12,7 @@ from modules import (
     Permute2d,
     LinearZeros,
     SqueezeLayer,
+    UnSqueezeLayer,
     Split2d,
     gaussian_likelihood,
     gaussian_sample,
@@ -169,8 +170,8 @@ class FlowNet(nn.Module):
                 )
                 self.output_shapes.append([-1, C, H, W])
             if i < L - 1:
-                self.layers.append(InvertibleConv2D(C, False, C//2))
-                self.output_shapes.append([-1, C // 2, H, W])
+                self.layers.append(UnSqueezeLayer(factor=2))
+                self.output_shapes.append([-1, C // 2, H*2, W*2])
                 C = C // 2
 
     def forward(self, input, logdet=0.0, reverse=False, temperature=None):
