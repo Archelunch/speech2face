@@ -179,7 +179,7 @@ def main(cfg):
         max_epochs=epochs,
         gpus=num_gpu,
         num_nodes=num_nodes,
-        distributed_backend=db,
+        # distributed_backend=db,
         gradient_clip_val=max_grad_norm,
         logger=wandb_logger,
         precision=precision,
