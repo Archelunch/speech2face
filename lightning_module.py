@@ -79,6 +79,7 @@ class GlowLighting(pl.LightningModule):
         self.y_weight = y_weight
         self.warmup = warmup
         self.n_init_batches = n_init_batches
+        self.first = True
 
     def forward(self, x=None, y_onehot=None, z=None, temperature=None, reverse=False):
         return self.model.forward(
@@ -152,7 +153,7 @@ class GlowLighting(pl.LightningModule):
             else:
                 y = None
 
-            images = self.model(y_onehot=y, temperature=0.7, reverse=True)
+            images = self.swa_model(y_onehot=y, temperature=0.7, reverse=True)
         return (
             make_grid(images.cpu()[:30], nrow=6, normalize=False)
             .permute(1, 2, 0)
@@ -160,19 +161,25 @@ class GlowLighting(pl.LightningModule):
         )
 
     def validation_step(self, batch, batch_nb):
+        if self.first:
+            torch.optim.swa_utils.update_bn(
+                self.train_dataloader(), self.swa_model)
+            self.first = False
+
         x, y = batch
         if self.y_condition:
-            z, nll, y_logits = self.forward(x, y)
+            z, nll, y_logits = self.swa_model.forward(x, y)
             losses = compute_loss_y(
                 nll, y_logits, self.y_weight, y, self.multi_class, reduction="none"
             )
         else:
-            z, nll, y_logits = self.forward(x, None)
+            z, nll, y_logits = self.swa_model.forward(x, None)
             losses = compute_loss(nll, reduction="none")
 
         return {"val_loss": losses["total_loss"]}
 
     def validation_epoch_end(self, validation_step_outputs):
+        self.first = True
         val_loss = torch.stack([x['val_loss']
                                 for x in validation_step_outputs]).mean()
         images = self.sample()
