@@ -1,5 +1,7 @@
 import torch
 import torch.optim as optim
+from torch.optim.lr_scheduler import CosineAnnealingLR
+from torch.optim.swa_utils import AveragedModel, SWALR
 import torch.utils.data as data
 from torchvision.utils import make_grid
 
@@ -92,13 +94,13 @@ class GlowLighting(pl.LightningModule):
         # def lr_lambda(epoch):
         #     return min(1.0, (epoch + 1) / self.warmup)  # noqa
 
-        # scheduler = optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lr_lambda)
+        scheduler = CosineAnnealingLR(optimizer, T_max=100)
 
-        # if self.use_swa:
-        # swa_model = AveragedModel(self.model)
-        # swa_scheduler = SWALR(optimizer, swa_lr=self.swa_lr
+        if self.use_swa:
+            self.swa_model = AveragedModel(self.model)
+            self.swa_scheduler = SWALR(optimizer, swa_lr=self.swa_lr)
 
-        return [optimizer]  # , [scheduler]
+        return [optimizer], [scheduler]
 
     def train_dataloader(self):
         train_loader = data.DataLoader(
@@ -121,7 +123,13 @@ class GlowLighting(pl.LightningModule):
         return test_loader
 
     def training_step(self, batch, batch_nb):
+        if (batch_nb % 100 == 0) and (batch_nb != 0):
+            print("swa update")
+            self.swa_model.update_parameters(self.model)
+            self.swa_scheduler.step()
+
         x, y = batch
+
         if self.y_condition:
             z, nll, y_logits = self.forward(x, y)
             losses = compute_loss_y(
