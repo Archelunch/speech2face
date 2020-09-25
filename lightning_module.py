@@ -95,13 +95,13 @@ class GlowLighting(pl.LightningModule):
         # def lr_lambda(epoch):
         #     return min(1.0, (epoch + 1) / self.warmup)  # noqa
 
-        #scheduler = CosineAnnealingLR(optimizer, T_max=100)
+        scheduler = CosineAnnealingLR(optimizer, T_max=100)
 
         if self.use_swa:
             self.swa_model = AveragedModel(self.model)
             self.swa_scheduler = SWALR(optimizer, swa_lr=self.swa_lr)
 
-        return [optimizer]  # , [scheduler]
+        return [optimizer], [scheduler]
 
     def train_dataloader(self):
         train_loader = data.DataLoader(
@@ -124,11 +124,6 @@ class GlowLighting(pl.LightningModule):
         return test_loader
 
     def training_step(self, batch, batch_nb):
-        if (batch_nb % 100 == 0) and (batch_nb != 0):
-            print("swa update")
-            self.swa_model.update_parameters(self.model)
-            self.swa_scheduler.step()
-
         x, y = batch
 
         if self.y_condition:
@@ -147,13 +142,13 @@ class GlowLighting(pl.LightningModule):
     def sample(self):
         with torch.no_grad():
             if self.y_condition:
-                y = torch.eye(num_classes)
-                y = y.repeat(self.batch_size // num_classes + 1)
+                y = torch.eye(self.num_classes)
+                y = y.repeat(self.batch_size // self.num_classes + 1)
                 y = y[:32, :].to(device)  # number hardcoded in model for now
             else:
                 y = None
 
-            images = self.swa_model(y_onehot=y, temperature=0.7, reverse=True)
+            images = self.forward(y_onehot=y, temperature=0.7, reverse=True)
         return (
             make_grid(images.cpu()[:30], nrow=6, normalize=False)
             .permute(1, 2, 0)
@@ -161,25 +156,19 @@ class GlowLighting(pl.LightningModule):
         )
 
     def validation_step(self, batch, batch_nb):
-        if self.first:
-            torch.optim.swa_utils.update_bn(
-                self.train_dataloader(), self.swa_model)
-            self.first = False
-
         x, y = batch
         if self.y_condition:
-            z, nll, y_logits = self.swa_model.forward(x, y)
+            z, nll, y_logits = self.forward(x, y)
             losses = compute_loss_y(
                 nll, y_logits, self.y_weight, y, self.multi_class, reduction="none"
             )
         else:
-            z, nll, y_logits = self.swa_model.forward(x, None)
+            z, nll, y_logits = self.forward(x, None)
             losses = compute_loss(nll, reduction="none")
 
         return {"val_loss": losses["total_loss"]}
 
     def validation_epoch_end(self, validation_step_outputs):
-        self.first = True
         val_loss = torch.stack([x['val_loss']
                                 for x in validation_step_outputs]).mean()
         images = self.sample()
