@@ -170,9 +170,9 @@ class FlowNet(nn.Module):
                 )
                 self.output_shapes.append([-1, C, H, W])
             if i < L - 1:
-                self.layers.append(UnSqueezeLayer(factor=2))
-                self.output_shapes.append([-1, C // 2, H*2, W*2])
-                C = C // 2
+                # self.layers.append(UnSqueezeLayer(factor=2))
+                # self.output_shapes.append([-1, C // 4, H*2, W*2])
+                C = C // 4
 
     def forward(self, input, logdet=0.0, reverse=False, temperature=None):
         if reverse:
