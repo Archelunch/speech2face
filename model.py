@@ -8,6 +8,7 @@ from modules import (
     Conv2dZeros,
     ActNorm2d,
     InvertibleConv1x1,
+    InvertibleConv2D,
     Permute2d,
     LinearZeros,
     SqueezeLayer,
@@ -168,6 +169,8 @@ class FlowNet(nn.Module):
                 )
                 self.output_shapes.append([-1, C, H, W])
             if i < L - 1:
+                self.layers.append(InvertibleConv2D(C, LU_decomposed, C//2))
+                self.output_shapes.append([-1, C // 2, H, W])
                 C = C // 2
 
     def forward(self, input, logdet=0.0, reverse=False, temperature=None):
