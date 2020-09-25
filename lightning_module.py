@@ -95,13 +95,13 @@ class GlowLighting(pl.LightningModule):
         # def lr_lambda(epoch):
         #     return min(1.0, (epoch + 1) / self.warmup)  # noqa
 
-        scheduler = CosineAnnealingLR(optimizer, T_max=100)
+        #scheduler = CosineAnnealingLR(optimizer, T_max=100)
 
         if self.use_swa:
             self.swa_model = AveragedModel(self.model)
             self.swa_scheduler = SWALR(optimizer, swa_lr=self.swa_lr)
 
-        return [optimizer], [scheduler]
+        return [optimizer]  # , [scheduler]
 
     def train_dataloader(self):
         train_loader = data.DataLoader(
