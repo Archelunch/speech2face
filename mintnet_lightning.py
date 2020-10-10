@@ -22,7 +22,7 @@ def flow_loss(u, log_jacob, size_average=True):
     return loss
 
 
-class GlowLighting(pl.LightningModule):
+class MintLighting(pl.LightningModule):
     def __init__(
         self,
         model,

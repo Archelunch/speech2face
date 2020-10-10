@@ -28,6 +28,7 @@ from mintnet_model import Net
 from torchvision.utils import make_grid
 
 from lightning_module import GlowLighting
+from mintnet_lightning import MintLighting
 
 
 def dict2namespace(config):
@@ -115,7 +116,7 @@ def main(cfg):
     model_config = dict2namespace(model_config)
     model = Net(model_config)
 
-    glow_light = GlowLighting(
+    mint_light = MintLighting(
         model,
         opt_type,
         lr,
@@ -156,7 +157,7 @@ def main(cfg):
         # resume_from_checkpoint=saved_checkpoint,
         auto_select_gpus=True,
     )
-    trainer.fit(glow_light)
+    trainer.fit(mint_light)
 
 
 if __name__ == "__main__":
