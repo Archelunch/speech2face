@@ -106,6 +106,7 @@ def main(cfg):
     mintnet_config = cfg.mintnet_config
 
     os.environ['WANDB_API_KEY'] = cfg.wandb_key
+    os.environ['WANDB_MODE'] = "dryrun"
 
     check_manual_seed(seed)
 
