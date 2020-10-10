@@ -122,12 +122,12 @@ class MintLighting(pl.LightningModule):
 
     def sample(self):
         with torch.no_grad():
-            z = torch.randn(16, 3 * 128 * 128,
+            z = torch.randn(9, 3 * 64 * 64,
                             device=self.device)
             samples = self.model.sampling(z)
             samples = self.sigmoid_transform(samples)
 
-        return make_grid(samples.cpu(), 4)
+        return make_grid(samples.cpu(), 3)
 
     def validation_step(self, batch, batch_nb):
         x, y = batch
