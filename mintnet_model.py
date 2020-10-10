@@ -70,6 +70,13 @@ def generate_masks(mask1, center_mask1, mask2, center_mask2, mask3, center_mask3
                 center_mask2[i * input_dim: (i + 1) * input_dim, j * input_dim: (j + 1) * input_dim, ...])
 
 
+def elu_derivative(x, slope=1.0):
+    slope1 = torch.ones_like(x)
+    x = torch.min(x, torch.ones_like(x) * 70.)
+    slope2 = torch.exp(x) * slope
+    return torch.where(x > 0, slope1, slope2)
+
+
 class SequentialWithSampling(nn.Sequential):
     def sampling(self, z):
         for module in reversed(self._modules.values()):
