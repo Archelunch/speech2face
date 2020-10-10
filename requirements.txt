@@ -1,3 +1,5 @@
 pytorch-lightning
 wandb
 hydra-core
+tqdm
+numba
