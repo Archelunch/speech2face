@@ -5,7 +5,7 @@ import torch.nn.functional as F
 
 from torchvision import transforms, datasets
 
-n_bits = 5
+n_bits = 8
 
 
 def preprocess(x):
@@ -125,17 +125,17 @@ def get_CELEBA(augment, dataroot, download):
     image_shape = (128, 128, 3)
     num_classes = 40
     test_transform = transforms.Compose(
-        [transforms.Resize((128, 128)), transforms.ToTensor(), preprocess])
+        [transforms.Resize((128, 128)), transforms.ToTensor()])
 
     if augment:
         transformations = [
             transforms.RandomAffine(0, translate=(0.1, 0.1)),
-            transforms.RandomHorizontalFlip(),
+            transforms.RandomHorizontalFlip(p=0.5),
         ]
     else:
         transformations = []
     transformations.extend(
-        [transforms.Resize((128, 128)), transforms.ToTensor(), preprocess])
+        [transforms.Resize((128, 128)), transforms.ToTensor()])
 
     train_transform = transforms.Compose(transformations)
     path = Path(dataroot) / "data" / "CELEBA"
