@@ -117,7 +117,7 @@ class MintLighting(pl.LightningModule):
 
         return {
             "loss": loss,
-            "log": {"train_loss": loss, "bpd": bpd},
+            "log": {"train_loss": loss, "train_bpd": bpd},
         }
 
     def sample(self):
@@ -154,5 +154,5 @@ class MintLighting(pl.LightningModule):
             'val_loss': val_loss,
             "log": {"images": [wandb.Image(images, caption="samples")],
                     "val_loss": val_loss,
-                    'bpd': bpds},
+                    'val_bpd': bpds},
         }
