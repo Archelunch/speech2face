@@ -64,10 +64,10 @@ class MintLighting(pl.LightningModule):
 
     def configure_optimizers(self):
         if self.opt_type == "Ranger":
-            optimizer = Ranger(self.parameters(),
-                               lr=self.lr, eps=1e-4)
+            optimizer = optim.AdamW(self.parameters(),
+                                    lr=self.lr, eps=1e-4, amsgrad=True)
 
-        scheduler = CosineAnnealingLR(optimizer, T_max=100, eta_min=0)
+        scheduler = CosineAnnealingLR(optimizer, T_max=80, eta_min=0)
 
         return [optimizer], [scheduler]
 
