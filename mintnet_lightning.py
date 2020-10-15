@@ -64,10 +64,10 @@ class MintLighting(pl.LightningModule):
 
     def configure_optimizers(self):
         if self.opt_type == "Ranger":
-            optimizer = optim.AdamW(self.parameters(),
-                                    lr=self.lr, eps=1e-4, amsgrad=True)
+            optimizer = optim.Adamax(self.parameters(),
+                                     lr=self.lr, betas=(0.9, 0.999), eps=1e-4)
 
-        scheduler = CosineAnnealingLR(optimizer, T_max=80, eta_min=0)
+        scheduler = CosineAnnealingLR(optimizer, T_max=1000, eta_min=0)
 
         return [optimizer], [scheduler]
 
@@ -122,12 +122,12 @@ class MintLighting(pl.LightningModule):
 
     def sample(self):
         with torch.no_grad():
-            z = torch.randn(9, 3 * 64 * 64,
+            z = torch.randn(2, 3 * 128 * 128,
                             device=self.device)
             samples = self.model.sampling(z)
             samples = self.sigmoid_transform(samples)
 
-        return make_grid(samples.cpu(), 3)
+        return make_grid(samples.cpu(), 1)
 
     def validation_step(self, batch, batch_nb):
         x, y = batch
