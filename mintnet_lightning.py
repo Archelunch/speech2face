@@ -67,7 +67,7 @@ class MintLighting(pl.LightningModule):
             optimizer = optim.Adamax(self.parameters(),
                                      lr=self.lr, betas=(0.9, 0.999), eps=1e-4)
 
-        scheduler = CosineAnnealingLR(optimizer, T_max=1000, eta_min=0)
+        scheduler = CosineAnnealingLR(optimizer, T_max=100, eta_min=0)
 
         return [optimizer], [scheduler]
 
@@ -122,7 +122,7 @@ class MintLighting(pl.LightningModule):
 
     def sample(self):
         with torch.no_grad():
-            z = torch.randn(2, 3 * 128 * 128,
+            z = torch.randn(6, 3 * 128 * 128,
                             device=self.device)
             samples = self.model.sampling(z)
             samples = self.sigmoid_transform(samples)
