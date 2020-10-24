@@ -103,7 +103,7 @@ def main(cfg):
     accumulate_grad_batches = cfg.accumulate_grad_batches
     db = cfg.db
     num_nodes = cfg.num_nodes
-    mintnet_config = cfg.mintnet_config
+    #mintnet_config = cfg.mintnet_config
 
     os.environ['WANDB_API_KEY'] = cfg.wandb_key
     os.environ['WANDB_MODE'] = "dryrun"
@@ -112,12 +112,60 @@ def main(cfg):
 
     ds = check_dataset(dataset, dataroot, augment, download)
     image_shape, num_classes, train_dataset, test_dataset = ds
-    with open(mintnet_config, 'r') as f:
-        model_config = yaml.load(f)
-    model_config = dict2namespace(model_config)
-    model = Net(model_config)
 
-    mint_light = MintLighting(
+    model = Glow(
+        image_shape,
+        hidden_channels,
+        K,
+        L,
+        actnorm_scale,
+        flow_permutation,
+        flow_coupling,
+        LU_decomposed,
+        num_classes,
+        learn_top,
+        y_condition,
+    )
+
+    def init_act():
+        print("Started init")
+        model.cuda()
+        model.train()
+        train_loader = data.DataLoader(
+            train_dataset,
+            batch_size=batch_size,
+            shuffle=True,
+            num_workers=n_workers,
+            drop_last=True,
+        )
+        init_batches = []
+        init_targets = []
+        print("Started loop")
+        with torch.no_grad():
+            for batch, target in islice(train_loader, None, n_init_batches):
+                init_batches.append(batch)
+                init_targets.append(target)
+            print("Finished loop")
+            init_batches = torch.cat(init_batches).cuda()
+            assert init_batches.shape[0] == n_init_batches * batch_size
+
+            if y_condition:
+                init_targets = torch.cat(init_targets).cuda()
+            else:
+                init_targets = None
+
+            temp = model.forward(init_batches, init_targets)
+            print("Finished initialization")
+        del init_batches
+        del init_targets
+        del train_loader
+        del temp
+        model.cpu()
+        torch.cuda.empty_cache()
+
+    init_act()
+
+    glow_light = GlowLighting(
         model,
         opt_type,
         lr,
@@ -135,7 +183,7 @@ def main(cfg):
     )
 
     wandb_logger = WandbLogger(
-        name="MintNet experiment with CELEBA", project="glow-experiments"
+        name="Back to GLOW experiment with CELEBA", project="glow-experiments"
     )
 
     checkpoint_callback = ModelCheckpoint(
@@ -154,11 +202,11 @@ def main(cfg):
         precision=precision,
         checkpoint_callback=checkpoint_callback,
         accumulate_grad_batches=accumulate_grad_batches,
-        val_check_interval=0.1,
+        val_check_interval=0.2,
         resume_from_checkpoint=saved_checkpoint,
         auto_select_gpus=True,
     )
-    trainer.fit(mint_light)
+    trainer.fit(glow_light)
 
 
 if __name__ == "__main__":

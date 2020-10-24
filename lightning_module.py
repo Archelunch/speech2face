@@ -89,17 +89,10 @@ class GlowLighting(pl.LightningModule):
     def configure_optimizers(self):
         """TODO SWA"""
         if self.opt_type == "AdamW":
-            optimizer = Ranger(self.parameters(),
-                               lr=self.lr, weight_decay=5e-5)
+            optimizer = optim.Adamax(self.parameters(),
+                                     lr=self.lr, betas=(0.9, 0.999), eps=1e-4, weight_decay=5e-5)
 
-        # def lr_lambda(epoch):
-        #     return min(1.0, (epoch + 1) / self.warmup)  # noqa
-
-        scheduler = CosineAnnealingLR(optimizer, T_max=100)
-
-        if self.use_swa:
-            self.swa_model = AveragedModel(self.model)
-            self.swa_scheduler = SWALR(optimizer, swa_lr=self.swa_lr)
+        scheduler = CosineAnnealingLR(optimizer, T_max=1000)
 
         return [optimizer], [scheduler]
 
@@ -141,14 +134,8 @@ class GlowLighting(pl.LightningModule):
 
     def sample(self):
         with torch.no_grad():
-            if self.y_condition:
-                y = torch.eye(self.num_classes)
-                y = y.repeat(self.batch_size // self.num_classes + 1)
-                y = y[:32, :].to(device)  # number hardcoded in model for now
-            else:
-                y = None
-
-            images = self.forward(y_onehot=y, temperature=0.7, reverse=True)
+            y = None
+            images = self.forward(y_onehot=y, temperature=0.6, reverse=True)
         return (
             make_grid(images.cpu()[:30], nrow=6, normalize=False)
             .permute(1, 2, 0)
