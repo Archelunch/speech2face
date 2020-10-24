@@ -90,7 +90,7 @@ class GlowLighting(pl.LightningModule):
         """TODO SWA"""
         if self.opt_type == "AdamW":
             optimizer = optim.Adamax(self.parameters(),
-                                     lr=self.lr, betas=(0.9, 0.999), eps=1e-4, weight_decay=5e-5)
+                                     lr=self.lr, betas=(0.9, 0.999), eps=1e-4)
 
         scheduler = CosineAnnealingLR(optimizer, T_max=1000)
 
