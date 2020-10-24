@@ -73,7 +73,7 @@ def main(cfg):
     batch_size = cfg.batch_size
     eval_batch_size = cfg.eval_batch_size
     epochs = cfg.epochs
-    saved_model = cfg.saved_model
+
     saved_checkpoint = cfg.saved_checkpoint
     seed = cfg.seed
     hidden_channels = cfg.hidden_channels
