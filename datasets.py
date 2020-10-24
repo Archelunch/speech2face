@@ -125,17 +125,16 @@ def get_CELEBA(augment, dataroot, download):
     image_shape = (128, 128, 3)
     num_classes = 40
     test_transform = transforms.Compose(
-        [transforms.Resize((128, 128)), transforms.ToTensor()])
+        [transforms.Resize((128, 128)), transforms.ToTensor(), preprocess])
 
     if augment:
         transformations = [
-            transforms.RandomAffine(0, translate=(0.1, 0.1)),
             transforms.RandomHorizontalFlip(p=0.5),
         ]
     else:
         transformations = []
     transformations.extend(
-        [transforms.Resize((128, 128)), transforms.ToTensor()])
+        [transforms.Resize((128, 128)), transforms.ToTensor(), preprocess])
 
     train_transform = transforms.Compose(transformations)
     path = Path(dataroot) / "data" / "CELEBA"

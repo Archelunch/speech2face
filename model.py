@@ -8,11 +8,9 @@ from modules import (
     Conv2dZeros,
     ActNorm2d,
     InvertibleConv1x1,
-    InvertibleConv2D,
     Permute2d,
     LinearZeros,
     SqueezeLayer,
-    UnSqueezeLayer,
     Split2d,
     gaussian_likelihood,
     gaussian_sample,
@@ -169,11 +167,12 @@ class FlowNet(nn.Module):
                     )
                 )
                 self.output_shapes.append([-1, C, H, W])
-            # if i < L - 1:
-            #     # self.layers.append(UnSqueezeLayer(factor=2))
-            #     # self.output_shapes.append([-1, C // 4, H*2, W*2])
-            #     #C = C // 4
-            #     pass
+
+            # 3. Split2d
+            if i < L - 1:
+                self.layers.append(Split2d(num_channels=C))
+                self.output_shapes.append([-1, C // 2, H, W])
+                C = C // 2
 
     def forward(self, input, logdet=0.0, reverse=False, temperature=None):
         if reverse:
