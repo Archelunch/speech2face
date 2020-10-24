@@ -5,7 +5,7 @@ import torch.nn.functional as F
 
 from torchvision import transforms, datasets
 
-n_bits = 8
+n_bits = 5
 
 
 def preprocess(x):
