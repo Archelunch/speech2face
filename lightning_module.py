@@ -1,3 +1,5 @@
+import random
+
 import torch
 import torch.optim as optim
 from torch.optim.lr_scheduler import CosineAnnealingLR
@@ -89,8 +91,8 @@ class GlowLighting(pl.LightningModule):
     def configure_optimizers(self):
         """TODO SWA"""
         if self.opt_type == "AdamW":
-            optimizer = optim.AdamW(self.parameters(),
-                                    lr=self.lr, betas=(0.9, 0.999), eps=1e-4, weight_decay=5e-5)
+            optimizer = optim.Adamax(self.parameters(),
+                                     lr=self.lr, betas=(0.9, 0.999), eps=1e-4, weight_decay=5e-5, amsgrad=True)
 
         scheduler = CosineAnnealingLR(optimizer, T_max=1000)
 
@@ -132,10 +134,11 @@ class GlowLighting(pl.LightningModule):
             "log": {"train_loss": losses["total_loss"]},
         }
 
-    def sample(self):
+    def sample(self, temperature):
         with torch.no_grad():
             y = None
-            images = self.forward(y_onehot=y, temperature=0.6, reverse=True)
+            images = self.forward(
+                y_onehot=y, temperature=temperature, reverse=True)
         return (
             make_grid(images.cpu()[:30], nrow=6, normalize=False)
             .permute(1, 2, 0)
@@ -158,10 +161,12 @@ class GlowLighting(pl.LightningModule):
     def validation_epoch_end(self, validation_step_outputs):
         val_loss = torch.stack([x['val_loss']
                                 for x in validation_step_outputs]).mean()
-        images = self.sample()
+        temperature = max(0.1, round(random.random(), 2))
+        images = self.sample(temperature)
         print("returning images")
         return {
             'val_loss': val_loss,
             "log": {"images": [wandb.Image(images, caption="samples")],
-                    "val_loss": val_loss},
+                    "val_loss": val_loss,
+                    "temperature": temperature},
         }
