@@ -1,9 +1,11 @@
 from pathlib import Path
 
-import torch
-import torch.nn.functional as F
 
-from torchvision import transforms, datasets
+import torch
+from PIL import Image
+from torch.utils.data import Dataset
+from torchvision import datasets, transforms
+import torchvision.transforms.functional as F
 
 n_bits = 5
 
@@ -155,3 +157,45 @@ def get_CELEBA(augment, dataroot, download):
     )
 
     return image_shape, num_classes, train_dataset, test_dataset
+
+
+
+##### FACES #####
+
+
+to_tensor = transforms.ToTensor()
+normalize = transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+
+def process_one_image(img_path):
+    img = Image.open(img_path)
+    img = img.resize(size)
+    img = to_tensor(img)
+    img = normalize(img)
+    return img
+
+
+class DsetSimple(Dataset):
+    """ Input data: list of dicts, path, label
+        Returns: tensor, label """
+
+    def __init__(self, data_path, size):
+        with open(data_path, 'r') as f:
+            files = f.read()
+        
+        data = [os.path.abspath(f) for f in files.split('\n')[:10]]
+        self.data = data
+        self.size = size
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, idx):
+        path = self.data[idx]
+        img = process_one_image(path, size)
+
+        return img
+    
+def get_faces_dataset(train_path, val_path, size):    
+    return DsetSimple(train_path, size), DsetSimple(val_path, size)
+        
+    
