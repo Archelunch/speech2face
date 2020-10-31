@@ -42,5 +42,6 @@ def process_dataset(path: str, target_path: str) -> bool:
 
 
 if __name__ == "__main__":
-
-    process_dataset(path)
+    path = ""
+    target_path = ""
+    process_dataset(path, target_path)
