@@ -1,5 +1,5 @@
 import argparse
-import hydra
+from omegaconf import DictConfig, OmegaConf
 import os
 import json
 import shutil
@@ -27,8 +27,9 @@ from mintnet_model import Net
 
 from torchvision.utils import make_grid
 
-from lightning_module import GlowLighting
-from mintnet_lightning import MintLighting
+from glow_lightning import GlowLighting
+#from mintnet_lightning import MintLighting
+
 
 
 def dict2namespace(config):
@@ -62,13 +63,15 @@ def check_dataset(dataset, dataroot, augment, download):
         input_size, num_classes, train_dataset, test_dataset = celeba
     elif dataset == 'faces':
         train_dataset, test_dataset = get_faces_dataset('./train_faces.txt', './test_faces.txt')
-        input_size, num_classes, = 128, None
+        input_size, num_classes, = (128, 128, 3), None
+        
+    print(f'returning dataset {dataset}, train: {len(train_dataset)} test: {len(test_dataset)}')
     return input_size, num_classes,  train_dataset, test_dataset
 
 
-@hydra.main(config_path="config.yaml")
-def main(cfg):
 
+def main():
+    cfg = OmegaConf.load("config.yaml")
     dataset = cfg.dataset
     dataroot = cfg.dataroot
     download = cfg.download
@@ -145,7 +148,7 @@ def main(cfg):
         init_targets = []
         print("Started loop")
         with torch.no_grad():
-            for batch, target in islice(train_loader, None, n_init_batches):
+            for batch, target in islice(train_loader, n_init_batches):
                 init_batches.append(batch)
                 init_targets.append(target)
             print("Finished loop")

@@ -1,6 +1,7 @@
 from pathlib import Path
 
 
+import os
 import torch
 from PIL import Image
 from torch.utils.data import Dataset
@@ -166,12 +167,12 @@ def get_CELEBA(augment, dataroot, download):
 to_tensor = transforms.ToTensor()
 normalize = transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
 
-def process_one_image(img_path):
+def process_one_image(img_path, size):
     img = Image.open(img_path)
-    img = img.resize(size)
+    img = img.resize((size, size))
     img = to_tensor(img)
-    img = normalize(img)
-    return img
+    #img = normalize(img)
+    return preprocess(img)
 
 
 class DsetSimple(Dataset):
@@ -179,10 +180,10 @@ class DsetSimple(Dataset):
         Returns: tensor, label """
 
     def __init__(self, data_path, size):
-        with open(data_path, 'r') as f:
+        with open(os.path.abspath(data_path), 'r') as f:
             files = f.read()
         
-        data = [os.path.abspath(f) for f in files.split('\n')[:10]]
+        data = [os.path.abspath(f) for f in files.split('\n')]
         self.data = data
         self.size = size
 
@@ -191,9 +192,10 @@ class DsetSimple(Dataset):
 
     def __getitem__(self, idx):
         path = self.data[idx]
-        img = process_one_image(path, size)
-
-        return img
+        img = process_one_image(path, self.size)
+        
+        # Dummy to tensor for code compatabilty
+        return img, torch.tensor([1])
     
 def get_faces_dataset(train_path, val_path, size=128):    
     return DsetSimple(train_path, size), DsetSimple(val_path, size)

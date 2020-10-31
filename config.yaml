@@ -15,7 +15,7 @@ y_weight: 0.01 # "Weight for class condition loss"
 max_grad_clip: 0.5 # "Max gradient value (clip above - for off)"
 max_grad_norm: 0.5 # "Max norm of gradient (clip above - 0 for off)"
 n_workers: 4 # "number of data loading workers"
-batch_size: 32 # "batch size used during training"
+batch_size: 2 # "batch size used during training"
 eval_batch_size: 64 # "batch size used during evaluation"
 epochs: 1000 # "number of epochs to train for"
 opt_type: 'AdamW' #name of optimizer
@@ -41,4 +41,4 @@ num_nodes: 1
 # specify hidra output directory
 hydra:
   run:
-    dir: ./hydra_logs/
+    dir: ./
