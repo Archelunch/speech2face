@@ -9,7 +9,7 @@ from torchvision.utils import make_grid
 
 import pytorch_lightning as pl
 
-from ranger import Ranger
+#from ranger import Ranger
 import wandb
 
 

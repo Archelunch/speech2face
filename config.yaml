@@ -1,4 +1,4 @@
-dataset: celeba
+dataset: faces
 dataroot: '../../../'
 download: True
 augment: True

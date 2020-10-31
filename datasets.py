@@ -195,7 +195,7 @@ class DsetSimple(Dataset):
 
         return img
     
-def get_faces_dataset(train_path, val_path, size):    
+def get_faces_dataset(train_path, val_path, size=128):    
     return DsetSimple(train_path, size), DsetSimple(val_path, size)
         
     

@@ -21,7 +21,7 @@ from pytorch_lightning.loggers import WandbLogger
 from pytorch_lightning.callbacks import ModelCheckpoint
 
 
-from datasets import get_CIFAR10, get_SVHN, get_CELEBA, postprocess
+from datasets import get_CIFAR10, get_SVHN, get_CELEBA, postprocess, get_faces_dataset
 from model import Glow
 from mintnet_model import Net
 
@@ -60,7 +60,10 @@ def check_dataset(dataset, dataroot, augment, download):
     elif dataset == "celeba":
         celeba = get_CELEBA(augment, dataroot, download)
         input_size, num_classes, train_dataset, test_dataset = celeba
-    return input_size, num_classes, train_dataset, test_dataset
+    elif dataset == 'faces':
+        train_dataset, test_dataset = get_faces_dataset('./train_faces.txt', './test_faces.txt')
+        input_size, num_classes, = 128, None
+    return input_size, num_classes,  train_dataset, test_dataset
 
 
 @hydra.main(config_path="config.yaml")
