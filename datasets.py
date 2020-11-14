@@ -166,10 +166,12 @@ def get_CELEBA(augment, dataroot, download):
 
 to_tensor = transforms.ToTensor()
 normalize = transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+random_flip = transforms.RandomHorizontalFlip(p=0.5)
 
 def process_one_image(img_path, size):
     img = Image.open(img_path)
     img = img.resize((size, size))
+    img = random_flip(img)
     img = to_tensor(img)
     #img = normalize(img)
     return preprocess(img)

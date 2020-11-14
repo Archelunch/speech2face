@@ -9,7 +9,7 @@ from torchvision.utils import make_grid
 
 import pytorch_lightning as pl
 
-#from ranger import Ranger
+from ranger import Ranger
 import wandb
 
 
@@ -91,8 +91,8 @@ class GlowLighting(pl.LightningModule):
     def configure_optimizers(self):
         """TODO SWA"""
         if self.opt_type == "AdamW":
-            optimizer = optim.AdamW(self.parameters(),
-                                    lr=self.lr, betas=(0.9, 0.999), eps=1e-4, weight_decay=5e-5, amsgrad=True)
+            optimizer = Ranger(self.parameters(),
+                                    lr=self.lr)
 
         scheduler = CosineAnnealingLR(optimizer, T_max=1000)
 

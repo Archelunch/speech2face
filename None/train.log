@@ -1,9 +1,0 @@
-[2020-09-04 10:20:56,198][lightning][INFO] - GPU available: True, used: True
-[2020-09-04 10:20:56,199][lightning][INFO] - TPU available: False, using: 0 TPU cores
-[2020-09-04 10:20:56,199][lightning][INFO] - CUDA_VISIBLE_DEVICES: [0]
-[2020-09-04 10:20:56,201][lightning][INFO] - Using native 16bit precision.
-[2020-09-04 10:21:19,468][lightning][INFO] - 
-  | Name  | Type | Params
--------------------------------
-0 | model | Glow | 111 M 
-[2020-09-06 11:36:45,944][lightning][INFO] - Saving latest checkpoint..
