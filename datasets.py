@@ -25,8 +25,10 @@ def postprocess(x):
     x = x * 2 ** n_bits
     return torch.clamp(x, 0, 255).byte()
 
+
 to_tensor = transforms.ToTensor()
 normalize = transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+
 
 def process_one_image(img_path, size):
     img = Image.open(img_path)
@@ -43,7 +45,7 @@ class ImagesEmbeddingsDataset(Dataset):
     def __init__(self, data_path, size):
         with open(os.path.abspath(data_path), 'r') as f:
             files = f.read()
-        
+
         data = [f.split(' ') for f in files.split('\n')]
         self.data = data
         self.size = size
@@ -54,11 +56,10 @@ class ImagesEmbeddingsDataset(Dataset):
     def __getitem__(self, idx):
         img_path, emb_path = self.data[idx]
         img = process_one_image(img_path, self.size)
-        emb = torch.tensor(np.load(emb_path)) #.unsqueeze(0)
+        emb = torch.tensor(np.load(emb_path))  # .unsqueeze(0)
         # Dummy to tensor for code compatabilty
-        return img, emb
-    
-def get_dataset(train_path, val_path, size=128):    
+        return emb, img
+
+
+def get_dataset(train_path, val_path, size=128):
     return ImagesEmbeddingsDataset(train_path, size), ImagesEmbeddingsDataset(val_path, size)
-        
-    

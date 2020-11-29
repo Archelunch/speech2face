@@ -53,13 +53,15 @@ class DecoderLighting(pl.LightningModule):
         return test_loader
 
     def training_step(self, batch, batch_nb):
-        x, y = batch
-        x = self.model(x)
+        x, y = batch  # x embedding, y image
+        x = self.model(x)  # from resemblyzer to z space
         with torch.no_grad():
-            y_z = self.glow(y)
+            y_z = self.glow(y)  # from image to z space
+
+            # from z space (resemblyzer) to image
             z_y = self.glow(x, reverse=True)
 
-        loss1 = torch.nn.SmoothL1Loss()(x, y_z)
+        loss1 = torch.nn.KLDivLoss()(x, y_z)
         loss2 = torch.nn.MSE()(z_y, y)
 
         return {
