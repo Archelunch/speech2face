@@ -12,7 +12,7 @@ from ranger import Ranger
 
 
 class DecoderLighting(pl.LightningModule):
-    def __init__(self, decoder, glow, lr, opt_type, train_dataset, test_dataset, batch_size, eval_batch_size, n_workers):
+    def __init__(self, decoder, glow, lr, opt_type, train_dataset, test_dataset, batch_size, eval_batch_size, n_workers, loss_name):
         self.model = model
         self.glow = glow
         self.opt_type = opt_type
@@ -22,9 +22,10 @@ class DecoderLighting(pl.LightningModule):
         self.test_dataset = test_dataset
         self.batch_size = batch_size
         self.train_dataset = train_dataset
+        self.loss_name = loss_name
 
     def forward(self, x):
-        return self.model.forward(x)
+        return self.model(x)
 
     def configure_optimizers(self):
         optimizer = Ranger(self.parameters(),
@@ -76,7 +77,7 @@ class DecoderLighting(pl.LightningModule):
                 y_z = self.glow(y)
                 z_y = self.glow(x, reverse=True)
 
-            loss1 = torch.nn.SmoothL1Loss()(x, y_z)
+            loss1 = torch.nn.KLDivLoss()(x, y_z)
             loss2 = torch.nn.MSE()(z_y, y)
 
             return {"val_loss": loss1+loss2}
