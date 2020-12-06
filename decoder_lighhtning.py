@@ -12,8 +12,18 @@ from ranger import Ranger
 
 
 class DecoderLighting(pl.LightningModule):
-    def __init__(self, decoder, glow, lr, opt_type, train_dataset, test_dataset, batch_size, eval_batch_size, n_workers, loss_name):
-        self.model = model
+    def __init__(
+        self,
+        glow,
+        res_to_glow,
+        lr,
+        train_dataset,
+        test_dataset,
+        batch_size,
+        eval_batch_size,
+        n_workers,
+    ):
+        self.res_to_glow = res_to_glow
         self.glow = glow
         self.opt_type = opt_type
         self.lr = lr
@@ -22,14 +32,12 @@ class DecoderLighting(pl.LightningModule):
         self.test_dataset = test_dataset
         self.batch_size = batch_size
         self.train_dataset = train_dataset
-        self.loss_name = loss_name
 
     def forward(self, x):
-        return self.model(x)
+        return self.res_to_glow(x)
 
     def configure_optimizers(self):
-        optimizer = Ranger(self.parameters(),
-                           lr=self.lr)
+        optimizer = Ranger(self.parameters(), lr=self.lr)
 
         return [optimizer]
 
@@ -54,30 +62,30 @@ class DecoderLighting(pl.LightningModule):
         return test_loader
 
     def training_step(self, batch, batch_nb):
-        x, y = batch  # x embedding, y image
-        x = self.model(x)  # from resemblyzer to z space
-        with torch.no_grad():
-            y_z = self.glow(y)  # from image to z space
+        sound_emb, image = batch  # x embedding, y image
+        z_sound = self.res_to_glow(sound_emb)  # from resemblyzer to z space
+        z_image = self.glow(image)  # from image to z space
+        image_from_sound = self.glow(
+            z_sound, reverse=True
+        )  # from z space (resemblyzer) to image
 
-            # from z space (resemblyzer) to image
-            z_y = self.glow(x, reverse=True)
-
-        loss1 = torch.nn.KLDivLoss()(x, y_z)
-        loss2 = torch.nn.MSE()(z_y, y)
+        loss1 = torch.nn.KLDivLoss()(z_image, z_sound)
+        loss2 = torch.nn.MSE()(image_from_sound, image)
 
         return {
             "loss": loss1 + loss2,
-            "log": {"MSE_loss": loss2, 'Distance Loss': loss1},
+            "log": {"MSE_loss": loss2, "Distance Loss": loss1},
         }
 
-        def validation_step(self, batch, batch_nb):
-            x, y = batch
-            x = self.model(x)
-            with torch.no_grad():
-                y_z = self.glow(y)
-                z_y = self.glow(x, reverse=True)
+    def validation_step(self, batch, batch_nb):
+        sound_emb, image = batch  # x embedding, y image
+        z_sound = self.res_to_glow(sound_emb)  # from resemblyzer to z space
+        z_image = self.glow(image)  # from image to z space
+        image_from_sound = self.glow(
+            z_sound, reverse=True
+        )  # from z space (resemblyzer) to image
 
-            loss1 = torch.nn.KLDivLoss()(x, y_z)
-            loss2 = torch.nn.MSE()(z_y, y)
+        loss1 = torch.nn.KLDivLoss()(z_image, z_sound)
+        loss2 = torch.nn.MSE()(image_from_sound, image)
 
-            return {"val_loss": loss1+loss2}
+        return {"val_loss": loss1 + loss2}

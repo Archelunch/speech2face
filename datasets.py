@@ -34,19 +34,19 @@ def process_one_image(img_path, size):
     img = Image.open(img_path)
     img = img.resize((size, size))
     img = to_tensor(img)
-    #img = normalize(img)
+    # img = normalize(img)
     return preprocess(img)
 
 
 class ImagesEmbeddingsDataset(Dataset):
-    """ Input data: list of dicts, path, label
-        Returns: tensor, label """
+    """Input data: list of dicts, path, label
+    Returns: tensor, label"""
 
     def __init__(self, data_path, size):
-        with open(os.path.abspath(data_path), 'r') as f:
+        with open(os.path.abspath(data_path), "r") as f:
             files = f.read()
 
-        data = [f.split(' ') for f in files.split('\n')]
+        data = [f.split(" ") for f in files.split("\n")]
         self.data = data
         self.size = size
 
@@ -61,5 +61,7 @@ class ImagesEmbeddingsDataset(Dataset):
         return emb, img
 
 
-def get_dataset(train_path, val_path, size=128):
-    return ImagesEmbeddingsDataset(train_path, size), ImagesEmbeddingsDataset(val_path, size)
+def get_dataset(train_path, val_path, image_size=128):
+    return ImagesEmbeddingsDataset(train_path, size), ImagesEmbeddingsDataset(
+        val_path, size
+    )
