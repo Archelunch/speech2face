@@ -12,28 +12,28 @@ LU_decomposed: True
 learn_top: True
 y_condition: False
 y_weight: 0.01 # "Weight for class condition loss"
-max_grad_clip: 5 # "Max gradient value (clip above - for off)"
-max_grad_norm: 5 # "Max norm of gradient (clip above - 0 for off)"
+max_grad_clip: 1 # "Max gradient value (clip above - for off)"
+max_grad_norm: 1 # "Max norm of gradient (clip above - 0 for off)"
 n_workers: 4 # "number of data loading workers"
 batch_size: 8 # "batch size used during training"
 eval_batch_size: 8 # "batch size used during evaluation"
 epochs: 1000 # "number of epochs to train for"
 opt_type: 'AdamW' #name of optimizer
-lr: 1e-4
+lr: 5e-4
 use_swa: False #using of Stochastic Weight Averaging
 swa_start: 0 # when start swa, 0 if disabled
 swa_lr: 0 # learning rate of swa, 0 if disabled
 warmup: 5 # "Use this number of epochs to warmup learning rate linearly from zero to learning rate"
-n_init_batches: 16  # "Number of batches to use for Act Norm initialisation"
+n_init_batches: 1  # "Number of batches to use for Act Norm initialisation"
 cuda: True
 output_dir: "./output/"
 fresh: True # "Remove output directory before starting"
 saved_model: "checkpoints"  # "Path to model to load for continuing training"
-saved_checkpoint: "/home/mvpavlukhin/speech2face/hydra_logs/output/epoch=126.ckpt"
+saved_checkpoint: "/home/mvpavlukhin/speech2face/output/epoch=14.ckpt"
 seed: 666
 precision: 16
 num_gpu: 1
-accumulate_grad_batches: 4
+accumulate_grad_batches: 5
 wandb_key: "21c78eafd4fee542c98beb82cab2ea36505fdc41"
 db: "ddp"
 num_nodes: 4

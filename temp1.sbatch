@@ -2,7 +2,7 @@
 #SBATCH --job-name=glow-pretrain
 #SBATCH --error=./sbatch_logs/glow-pretrain-%j.err
 #SBATCH --output=./sbatch_logs/glow-pretrain-%j.Log
-#SBATCH --time=48:00:00
+#SBATCH --time=168:00:00
 #SBATCH --cpus-per-task=2
 #SBATCH --nodes=4
 #SBATCH --gpus=4
