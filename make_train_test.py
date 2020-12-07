@@ -5,8 +5,8 @@ from tqdm import tqdm
 from glob import glob
 
 
-image_folder = '/home/dev/other/data/unzippedFaces/'
-speech_embeddigns_folder = '/home/dev/other/resemblyzer/embeddings/'
+image_folder = '/home/mvpavlukhin/data/unzippedFaces/'
+speech_embeddigns_folder = '/home/mvpavlukhin/data/speech_emb/embeddings/'
 csv_path = './vox1_meta.csv'
 
 def get_all_paths(path, ext):
@@ -27,7 +27,7 @@ def get_dataset(dataset):
         for image in images:
             for embedding in embeddings:
                 dataset.append(' '.join([image, embedding+'\n',]))
-                                   
+
     return dataset
 
 
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     
     items  = get_dataset(dataset)
     random.shuffle(items)
-    train_test = ((items[:1000],'train'), (items[1000:],'test'))
+    train_test = ((items[:1000],'test'), (items[1000:],'train'))
     
     for paths, name in train_test:
         with open(f'{name}.txt', 'w') as f:
