@@ -3,3 +3,4 @@
 *.txt
 wandb/
 output/
+sbatch_logs/
