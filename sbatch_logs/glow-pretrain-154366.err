@@ -1,0 +1,102 @@
+GPU available: True, used: True
+GPU available: True, used: True
+TPU available: False, using: 0 TPU cores
+TPU available: False, using: 0 TPU cores
+Multi-processing is handled by Slurm.
+Multi-processing is handled by Slurm.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Using native 16bit precision.
+initializing ddp: GLOBAL_RANK: 1, MEMBER: 2/4
+Using native 16bit precision.
+initializing ddp: GLOBAL_RANK: 0, MEMBER: 1/4
+GPU available: True, used: True
+TPU available: False, using: 0 TPU cores
+Multi-processing is handled by Slurm.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Using native 16bit precision.
+initializing ddp: GLOBAL_RANK: 2, MEMBER: 3/4
+GPU available: True, used: True
+TPU available: False, using: 0 TPU cores
+Multi-processing is handled by Slurm.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Using native 16bit precision.
+initializing ddp: GLOBAL_RANK: 3, MEMBER: 4/4
+wandb: Offline run mode, not syncing to the cloud.
+wandb: W&B is disabled in this directory.  Run `wandb on` to enable cloud syncing.
+Set SLURM handle signals.
+Set SLURM handle signals.
+Set SLURM handle signals.
+Set SLURM handle signals.
+
+  | Name  | Type | Params
+-------------------------------
+0 | model | Glow | 267 M 
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/utilities/distributed.py:45: UserWarning: The validation_epoch_end should not return anything as of 9.1.to log, use self.log(...) or self.write(...) directly in the LightningModule
+  warnings.warn(*args, **kwargs)
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/utilities/distributed.py:45: UserWarning: The {log:dict keyword} was deprecated in 0.9.1 and will be removed in 1.0.0
+Please use self.log(...) inside the lightningModule instead.
+
+# log on a step or aggregate epoch metric to the logger and/or progress bar
+# (inside LightningModule)
+self.log('train_loss', loss, on_step=True, on_epoch=True, prog_bar=True)
+  warnings.warn(*args, **kwargs)
+wandb: Network error (ConnectTimeout), entering retry loop. See wandb/offline-run-20201206_134346-3qscawoj/logs/debug-internal.log for full traceback.
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/ranger/ranger.py:138: UserWarning: This overload of addcmul_ is deprecated:
+	addcmul_(Number value, Tensor tensor1, Tensor tensor2)
+Consider using one of the following signatures instead:
+	addcmul_(Tensor tensor1, Tensor tensor2, *, Number value) (Triggered internally at  /opt/conda/conda-bld/pytorch_1595629395347/work/torch/csrc/utils/python_arg_parser.cpp:766.)
+  exp_avg_sq.mul_(beta2).addcmul_(1 - beta2, grad, grad)
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/ranger/ranger.py:138: UserWarning: This overload of addcmul_ is deprecated:
+	addcmul_(Number value, Tensor tensor1, Tensor tensor2)
+Consider using one of the following signatures instead:
+	addcmul_(Tensor tensor1, Tensor tensor2, *, Number value) (Triggered internally at  /opt/conda/conda-bld/pytorch_1595629395347/work/torch/csrc/utils/python_arg_parser.cpp:766.)
+  exp_avg_sq.mul_(beta2).addcmul_(1 - beta2, grad, grad)
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/ranger/ranger.py:138: UserWarning: This overload of addcmul_ is deprecated:
+	addcmul_(Number value, Tensor tensor1, Tensor tensor2)
+Consider using one of the following signatures instead:
+	addcmul_(Tensor tensor1, Tensor tensor2, *, Number value) (Triggered internally at  /opt/conda/conda-bld/pytorch_1595629395347/work/torch/csrc/utils/python_arg_parser.cpp:766.)
+  exp_avg_sq.mul_(beta2).addcmul_(1 - beta2, grad, grad)
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/ranger/ranger.py:138: UserWarning: This overload of addcmul_ is deprecated:
+	addcmul_(Number value, Tensor tensor1, Tensor tensor2)
+Consider using one of the following signatures instead:
+	addcmul_(Tensor tensor1, Tensor tensor2, *, Number value) (Triggered internally at  /opt/conda/conda-bld/pytorch_1595629395347/work/torch/csrc/utils/python_arg_parser.cpp:766.)
+  exp_avg_sq.mul_(beta2).addcmul_(1 - beta2, grad, grad)
+Epoch 15: val_loss reached 1.55381 (best 1.55381), saving model to /home/mvpavlukhin/speech2face/output/epoch=15.ckpt as top 1
+Epoch 15: val_loss was not in top 1
+Epoch 15: val_loss was not in top 1
+Epoch 15: val_loss was not in top 1
+Epoch 15: val_loss reached 1.51318 (best 1.51318), saving model to /home/mvpavlukhin/speech2face/output/epoch=15-v0.ckpt as top 1
+Epoch 16: val_loss was not in top 1
+Epoch 16: val_loss was not in top 1
+Epoch 16: val_loss was not in top 1
+Epoch 16: val_loss was not in top 1
+Epoch 16: val_loss was not in top 1
+Epoch 17: val_loss was not in top 1
+Epoch 17: val_loss was not in top 1
+Epoch 17: val_loss was not in top 1
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/wandb/data_types.py:984: RuntimeWarning: invalid value encountered in subtract
+  data = (data - np.min(data)) / np.ptp(data)
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/wandb/data_types.py:984: RuntimeWarning: invalid value encountered in true_divide
+  data = (data - np.min(data)) / np.ptp(data)
+Epoch 17: val_loss was not in top 1
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/wandb/data_types.py:984: RuntimeWarning: invalid value encountered in subtract
+  data = (data - np.min(data)) / np.ptp(data)
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/wandb/data_types.py:984: RuntimeWarning: invalid value encountered in true_divide
+  data = (data - np.min(data)) / np.ptp(data)
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/wandb/data_types.py:984: RuntimeWarning: invalid value encountered in subtract
+  data = (data - np.min(data)) / np.ptp(data)
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/wandb/data_types.py:984: RuntimeWarning: invalid value encountered in true_divide
+  data = (data - np.min(data)) / np.ptp(data)
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/wandb/data_types.py:984: RuntimeWarning: invalid value encountered in subtract
+  data = (data - np.min(data)) / np.ptp(data)
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/wandb/data_types.py:984: RuntimeWarning: invalid value encountered in true_divide
+  data = (data - np.min(data)) / np.ptp(data)
+Epoch 17: val_loss was not in top 1
+srun: Job step aborted: Waiting up to 122 seconds for job step to finish.
+bypassing sigterm
+bypassing sigterm
+bypassing sigterm
+slurmstepd: error: *** JOB 154366 ON cn-011 CANCELLED AT 2020-12-08T12:59:43 ***
+slurmstepd: error: *** STEP 154366.0 ON cn-011 CANCELLED AT 2020-12-08T12:59:43 ***
+bypassing sigterm

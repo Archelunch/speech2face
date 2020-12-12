@@ -1,0 +1,112 @@
+GPU available: True, used: True
+TPU available: False, using: 0 TPU cores
+Multi-processing is handled by Slurm.
+GPU available: True, used: True
+TPU available: False, using: 0 TPU cores
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Multi-processing is handled by Slurm.
+Using native 16bit precision.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+initializing ddp: GLOBAL_RANK: 0, MEMBER: 1/4
+Using native 16bit precision.
+initializing ddp: GLOBAL_RANK: 1, MEMBER: 2/4
+GPU available: True, used: True
+TPU available: False, using: 0 TPU cores
+Multi-processing is handled by Slurm.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Using native 16bit precision.
+initializing ddp: GLOBAL_RANK: 2, MEMBER: 3/4
+GPU available: True, used: True
+TPU available: False, using: 0 TPU cores
+Multi-processing is handled by Slurm.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Using native 16bit precision.
+initializing ddp: GLOBAL_RANK: 3, MEMBER: 4/4
+wandb: Offline run mode, not syncing to the cloud.
+wandb: W&B is disabled in this directory.  Run `wandb on` to enable cloud syncing.
+Set SLURM handle signals.
+Set SLURM handle signals.
+Set SLURM handle signals.
+Set SLURM handle signals.
+
+  | Name  | Type | Params
+-------------------------------
+0 | model | Glow | 267 M 
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/utilities/distributed.py:45: UserWarning: The validation_epoch_end should not return anything as of 9.1.to log, use self.log(...) or self.write(...) directly in the LightningModule
+  warnings.warn(*args, **kwargs)
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/utilities/distributed.py:45: UserWarning: The {log:dict keyword} was deprecated in 0.9.1 and will be removed in 1.0.0
+Please use self.log(...) inside the lightningModule instead.
+
+# log on a step or aggregate epoch metric to the logger and/or progress bar
+# (inside LightningModule)
+self.log('train_loss', loss, on_step=True, on_epoch=True, prog_bar=True)
+  warnings.warn(*args, **kwargs)
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/ranger/ranger.py:138: UserWarning: This overload of addcmul_ is deprecated:
+	addcmul_(Number value, Tensor tensor1, Tensor tensor2)
+Consider using one of the following signatures instead:
+	addcmul_(Tensor tensor1, Tensor tensor2, *, Number value) (Triggered internally at  /opt/conda/conda-bld/pytorch_1595629395347/work/torch/csrc/utils/python_arg_parser.cpp:766.)
+  exp_avg_sq.mul_(beta2).addcmul_(1 - beta2, grad, grad)
+wandb: Network error (ConnectTimeout), entering retry loop. See wandb/offline-run-20201119_120751-1p3iwukd/logs/debug-internal.log for full traceback.
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/ranger/ranger.py:138: UserWarning: This overload of addcmul_ is deprecated:
+	addcmul_(Number value, Tensor tensor1, Tensor tensor2)
+Consider using one of the following signatures instead:
+	addcmul_(Tensor tensor1, Tensor tensor2, *, Number value) (Triggered internally at  /opt/conda/conda-bld/pytorch_1595629395347/work/torch/csrc/utils/python_arg_parser.cpp:766.)
+  exp_avg_sq.mul_(beta2).addcmul_(1 - beta2, grad, grad)
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/ranger/ranger.py:138: UserWarning: This overload of addcmul_ is deprecated:
+	addcmul_(Number value, Tensor tensor1, Tensor tensor2)
+Consider using one of the following signatures instead:
+	addcmul_(Tensor tensor1, Tensor tensor2, *, Number value) (Triggered internally at  /opt/conda/conda-bld/pytorch_1595629395347/work/torch/csrc/utils/python_arg_parser.cpp:766.)
+  exp_avg_sq.mul_(beta2).addcmul_(1 - beta2, grad, grad)
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/ranger/ranger.py:138: UserWarning: This overload of addcmul_ is deprecated:
+	addcmul_(Number value, Tensor tensor1, Tensor tensor2)
+Consider using one of the following signatures instead:
+	addcmul_(Tensor tensor1, Tensor tensor2, *, Number value) (Triggered internally at  /opt/conda/conda-bld/pytorch_1595629395347/work/torch/csrc/utils/python_arg_parser.cpp:766.)
+  exp_avg_sq.mul_(beta2).addcmul_(1 - beta2, grad, grad)
+Epoch 0: val_loss reached 3.54168 (best 3.54168), saving model to /home/mvpavlukhin/speech2face/output.ckpt as top 1
+Epoch 0: val_loss reached 3.13049 (best 3.13049), saving model to /home/mvpavlukhin/speech2face/output-v0.ckpt as top 1
+Epoch 0: val_loss reached 2.83674 (best 2.83674), saving model to /home/mvpavlukhin/speech2face/output.ckpt as top 1
+Epoch 0: val_loss reached 2.65470 (best 2.65470), saving model to /home/mvpavlukhin/speech2face/output-v0.ckpt as top 1
+Epoch 0: val_loss reached 2.54033 (best 2.54033), saving model to /home/mvpavlukhin/speech2face/output.ckpt as top 1
+Epoch 1: val_loss reached 2.51951 (best 2.51951), saving model to /home/mvpavlukhin/speech2face/output-v0.ckpt as top 1
+Epoch 1: val_loss reached 2.41493 (best 2.41493), saving model to /home/mvpavlukhin/speech2face/output.ckpt as top 1
+Epoch 1: val_loss reached 2.33168 (best 2.33168), saving model to /home/mvpavlukhin/speech2face/output-v0.ckpt as top 1
+Epoch 1: val_loss reached 2.22816 (best 2.22816), saving model to /home/mvpavlukhin/speech2face/output.ckpt as top 1
+Epoch 1: val_loss reached 2.14608 (best 2.14608), saving model to /home/mvpavlukhin/speech2face/output-v0.ckpt as top 1
+Epoch 2: val_loss was not in top 1
+Epoch 2: val_loss was not in top 1
+Epoch 2: val_loss was not in top 1
+Epoch 2: val_loss reached 1.99726 (best 1.99726), saving model to /home/mvpavlukhin/speech2face/output.ckpt as top 1
+Epoch 2: val_loss was not in top 1
+Epoch 3: val_loss was not in top 1
+Epoch 3: val_loss was not in top 1
+Epoch 3: val_loss reached 1.91103 (best 1.91103), saving model to /home/mvpavlukhin/speech2face/output-v0.ckpt as top 1
+Epoch 3: val_loss reached 1.88987 (best 1.88987), saving model to /home/mvpavlukhin/speech2face/output.ckpt as top 1
+Epoch 3: val_loss was not in top 1
+Epoch 4: val_loss reached 1.79232 (best 1.79232), saving model to /home/mvpavlukhin/speech2face/output-v0.ckpt as top 1
+Epoch 4: val_loss was not in top 1
+Epoch 4: val_loss was not in top 1
+Epoch 4: val_loss reached 1.78133 (best 1.78133), saving model to /home/mvpavlukhin/speech2face/output.ckpt as top 1
+Epoch 4: val_loss was not in top 1
+Epoch 5: val_loss reached 1.74132 (best 1.74132), saving model to /home/mvpavlukhin/speech2face/output-v0.ckpt as top 1
+Epoch 5: val_loss was not in top 1
+Epoch 5: val_loss was not in top 1
+Epoch 5: val_loss was not in top 1
+Epoch 5: val_loss reached 1.73454 (best 1.73454), saving model to /home/mvpavlukhin/speech2face/output.ckpt as top 1
+Epoch 6: val_loss reached 1.72576 (best 1.72576), saving model to /home/mvpavlukhin/speech2face/output-v0.ckpt as top 1
+Epoch 6: val_loss reached 1.69646 (best 1.69646), saving model to /home/mvpavlukhin/speech2face/output.ckpt as top 1
+Epoch 6: val_loss was not in top 1
+Epoch 6: val_loss was not in top 1
+Epoch 6: val_loss was not in top 1
+Epoch 7: val_loss was not in top 1
+Epoch 7: val_loss was not in top 1
+Epoch 7: val_loss was not in top 1
+Epoch 7: val_loss reached 1.65715 (best 1.65715), saving model to /home/mvpavlukhin/speech2face/output-v0.ckpt as top 1
+Epoch 7: val_loss was not in top 1
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/wandb/data_types.py:984: RuntimeWarning: invalid value encountered in subtract
+  data = (data - np.min(data)) / np.ptp(data)
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/wandb/data_types.py:984: RuntimeWarning: invalid value encountered in true_divide
+  data = (data - np.min(data)) / np.ptp(data)
+Epoch 8: val_loss was not in top 1
+srun: Job step aborted: Waiting up to 122 seconds for job step to finish.
+slurmstepd: error: *** JOB 146576 ON cn-001 CANCELLED AT 2020-11-25T19:31:15 ***
+slurmstepd: error: *** STEP 146576.0 ON cn-001 CANCELLED AT 2020-11-25T19:31:15 ***

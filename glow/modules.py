@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from utils import split_feature, compute_same_pad
+from glow.glow_utils import split_feature, compute_same_pad
 
 
 def gaussian_p(mean, logs, x):
@@ -24,6 +24,7 @@ def gaussian_likelihood(mean, logs, x):
 
 def gaussian_sample(mean, logs, temperature=1):
     # Sample from Gaussian with temperature
+    torch.manual_seed(7)
     z = torch.normal(mean, torch.exp(logs) * temperature)
 
     return z

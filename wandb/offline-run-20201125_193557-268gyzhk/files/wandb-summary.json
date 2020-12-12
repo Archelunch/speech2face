@@ -1,0 +1,1 @@
+{"train_loss": 1.3868539333343506, "epoch": 13, "_step": 110549, "_runtime": 364331, "_timestamp": 1606686488, "images": {"_type": "images/separated", "width": 782, "height": 652, "format": "png", "count": 1, "captions": ["samples"]}, "val_loss": 1.5446399450302124, "temperature": 0.34}

@@ -1,0 +1,37 @@
+
+  | Name        | Type    | Params
+----------------------------------------
+0 | res_to_glow | Decoder | 202 M 
+1 | glow        | Glow    | 267 M 
+Validation sanity check: 0it [00:00, ?it/s]Traceback (most recent call last):
+  File "train.py", line 78, in <module>
+    main()
+  File "train.py", line 74, in main
+    trainer.fit(decoder_light)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/trainer/trainer.py", line 444, in fit
+    results = self.accelerator_backend.train()
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/accelerators/cpu_accelerator.py", line 57, in train
+    results = self.train_or_test()
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/accelerators/accelerator.py", line 74, in train_or_test
+    results = self.trainer.train()
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/trainer/trainer.py", line 466, in train
+    self.run_sanity_check(self.get_model())
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/trainer/trainer.py", line 658, in run_sanity_check
+    _, eval_results = self.run_evaluation(test_mode=False, max_batches=self.num_sanity_val_batches)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/trainer/trainer.py", line 578, in run_evaluation
+    output = self.evaluation_loop.evaluation_step(test_mode, batch, batch_idx, dataloader_idx)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/trainer/evaluation_loop.py", line 171, in evaluation_step
+    output = self.trainer.accelerator_backend.validation_step(args)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/accelerators/cpu_accelerator.py", line 73, in validation_step
+    output = self.trainer.model.validation_step(*args)
+  File "/home/mvpavlukhin/speech2face/decoder_lighhtning.py", line 84, in validation_step
+    image_from_sound = self.glow(
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/torch/nn/modules/module.py", line 722, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/mvpavlukhin/speech2face/glow/model.py", line 279, in forward
+    return self.reverse_flow(z, y_onehot, temperature)
+  File "/home/mvpavlukhin/speech2face/glow/model.py", line 307, in reverse_flow
+    z = gaussian_sample(mean, logs, temperature)
+  File "/home/mvpavlukhin/speech2face/glow/modules.py", line 27, in gaussian_sample
+    z = torch.normal(mean, torch.exp(logs) * temperature)
+TypeError: unsupported operand type(s) for *: 'Tensor' and 'NoneType'

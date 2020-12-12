@@ -1,0 +1,44 @@
+2020-12-12 20:41:38,879 INFO    MainThread:186406 [wandb_init.py:_log_setup():292] Logging user logs to wandb/offline-run-20201212_204138-19mixpwa/logs/debug.log
+2020-12-12 20:41:38,881 INFO    MainThread:186406 [wandb_init.py:_log_setup():293] Logging internal logs to wandb/offline-run-20201212_204138-19mixpwa/logs/debug-internal.log
+2020-12-12 20:41:38,881 INFO    MainThread:186406 [wandb_setup.py:_flush():68] setting env: {'api_key': '21c78eafd4fee542c98beb82cab2ea36505fdc41', 'mode': 'dryrun'}
+2020-12-12 20:41:38,881 INFO    MainThread:186406 [wandb_setup.py:_flush():68] setting user settings: {}
+2020-12-12 20:41:38,881 INFO    MainThread:186406 [wandb_setup.py:_flush():68] multiprocessing start_methods=fork,spawn,forkserver
+2020-12-12 20:41:40,525 INFO    MainThread:186406 [wandb_run.py:_console_start():1265] atexit reg
+2020-12-12 20:41:40,548 INFO    MainThread:186406 [wandb_run.py:_redirect():1135] redirect: SettingsConsole.REDIRECT
+2020-12-12 20:41:40,549 INFO    MainThread:186406 [wandb_run.py:_redirect():1138] Redirecting console.
+2020-12-12 20:41:40,549 INFO    MainThread:186406 [redirect.py:install():196] install start
+2020-12-12 20:41:40,550 INFO    MainThread:186406 [redirect.py:install():211] install stop
+2020-12-12 20:41:40,550 INFO    MainThread:186406 [redirect.py:install():196] install start
+2020-12-12 20:41:40,551 INFO    MainThread:186406 [redirect.py:install():211] install stop
+2020-12-12 20:41:40,551 INFO    MainThread:186406 [wandb_run.py:_redirect():1182] Redirects installed.
+2020-12-12 20:41:40,551 INFO    MainThread:186406 [wandb_run.py:_config_callback():581] config_cb None None {'_wandb': {'cli_version': '0.10.5', 'python_version': '3.8.5', 'is_jupyter_run': False, 'is_kaggle_kernel': False, 'framework': 'torch'}}
+2020-12-12 20:41:50,124 INFO    MainThread:186406 [wandb_run.py:_atexit_cleanup():1238] got exitcode: 1
+2020-12-12 20:41:50,128 INFO    MainThread:186406 [wandb_run.py:_restore():1210] restore
+2020-12-12 20:41:50,128 INFO    MainThread:186406 [redirect.py:uninstall():215] uninstall start
+2020-12-12 20:41:50,129 INFO    MainThread:186406 [redirect.py:_stop():264] _stop: stdout
+2020-12-12 20:41:50,130 INFO    stdout    :186406 [redirect.py:_pipe_relay():119] relay done saw last write: stdout
+2020-12-12 20:41:50,130 INFO    MainThread:186406 [redirect.py:_stop():270] _stop closed: stdout
+2020-12-12 20:41:50,130 INFO    stdout    :186406 [redirect.py:_pipe_relay():135] relay done done: stdout
+2020-12-12 20:41:50,131 INFO    MainThread:186406 [redirect.py:_stop():276] _stop joined: stdout
+2020-12-12 20:41:50,131 INFO    MainThread:186406 [redirect.py:_stop():278] _stop rd closed: stdout
+2020-12-12 20:41:50,131 INFO    MainThread:186406 [redirect.py:uninstall():219] uninstall done
+2020-12-12 20:41:50,131 INFO    MainThread:186406 [redirect.py:uninstall():215] uninstall start
+2020-12-12 20:41:50,131 INFO    MainThread:186406 [redirect.py:_stop():264] _stop: stderr
+2020-12-12 20:41:50,131 INFO    MainThread:186406 [redirect.py:_stop():270] _stop closed: stderr
+2020-12-12 20:41:50,131 INFO    stderr    :186406 [redirect.py:_pipe_relay():119] relay done saw last write: stderr
+2020-12-12 20:41:50,132 INFO    stderr    :186406 [redirect.py:_pipe_relay():135] relay done done: stderr
+2020-12-12 20:41:50,132 INFO    MainThread:186406 [redirect.py:_stop():276] _stop joined: stderr
+2020-12-12 20:41:50,132 INFO    MainThread:186406 [redirect.py:_stop():278] _stop rd closed: stderr
+2020-12-12 20:41:50,132 INFO    MainThread:186406 [redirect.py:uninstall():219] uninstall done
+2020-12-12 20:41:50,142 INFO    MainThread:186406 [wandb_run.py:_wait_for_finish():1349] got exit ret: uuid: "ef8c2190b8af451cbc382a6440a6e0d0"
+
+2020-12-12 20:41:52,147 INFO    MainThread:186406 [wandb_run.py:_wait_for_finish():1349] got exit ret: uuid: "e5add89c942a45f49a14cf51e4dab3e7"
+response {
+  poll_exit_response {
+    done: true
+    exit_result {
+    }
+  }
+}
+
+2020-12-12 20:41:53,264 INFO    MainThread:186406 [internal.py:handle_exit():137] Internal process exited

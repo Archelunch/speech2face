@@ -1,0 +1,75 @@
+2020-12-12 20:08:55,323 INFO    MainThread:38256 [internal.py:wandb_internal():62] W&B internal server running at pid: 38256
+2020-12-12 20:08:55,328 DEBUG   HandlerThread:38256 [handler.py:handle_request():54] handle_request: run_start
+2020-12-12 20:08:55,329 INFO    WriterThread:38256 [datastore.py:open_for_write():76] open: wandb/offline-run-20201212_200853-3md7o1cn/run-3md7o1cn.wandb
+2020-12-12 20:08:55,341 DEBUG   HandlerThread:38256 [cmd.py:execute():718] Popen(['git', 'cat-file', '--batch-check'], cwd=/home/mvpavlukhin/speech2face, universal_newlines=False, shell=None, istream=<valid stream>)
+2020-12-12 20:08:55,360 DEBUG   HandlerThread:38256 [cmd.py:execute():718] Popen(['git', 'rev-parse', '--show-toplevel'], cwd=/home/mvpavlukhin/speech2face, universal_newlines=False, shell=None, istream=None)
+2020-12-12 20:09:25,207 DEBUG   SenderThread:38256 [sender.py:send():88] send: exit
+2020-12-12 20:09:25,208 DEBUG   HandlerThread:38256 [handler.py:handle_request():54] handle_request: poll_exit
+2020-12-12 20:09:25,208 INFO    SenderThread:38256 [sender.py:send_exit():156] handling exit code: 1
+2020-12-12 20:09:25,209 INFO    SenderThread:38256 [sender.py:send_exit():164] send defer
+2020-12-12 20:09:25,209 DEBUG   SenderThread:38256 [sender.py:send():88] send: request
+2020-12-12 20:09:25,209 DEBUG   SenderThread:38256 [sender.py:send_request():97] send_request: poll_exit
+2020-12-12 20:09:25,210 DEBUG   HandlerThread:38256 [handler.py:handle_request():54] handle_request: defer
+2020-12-12 20:09:25,210 INFO    HandlerThread:38256 [handler.py:handle_request_defer():68] handle defer: 0
+2020-12-12 20:09:25,211 DEBUG   SenderThread:38256 [sender.py:send():88] send: request
+2020-12-12 20:09:25,211 DEBUG   SenderThread:38256 [sender.py:send_request():97] send_request: defer
+2020-12-12 20:09:25,211 INFO    SenderThread:38256 [sender.py:send_request_defer():173] handle sender defer: 0
+2020-12-12 20:09:25,211 INFO    SenderThread:38256 [sender.py:send_request_defer():209] send defer: 1
+2020-12-12 20:09:25,212 DEBUG   HandlerThread:38256 [handler.py:handle_request():54] handle_request: defer
+2020-12-12 20:09:25,212 INFO    HandlerThread:38256 [handler.py:handle_request_defer():68] handle defer: 1
+2020-12-12 20:09:25,305 DEBUG   SenderThread:38256 [sender.py:send():88] send: request
+2020-12-12 20:09:25,306 DEBUG   SenderThread:38256 [sender.py:send_request():97] send_request: defer
+2020-12-12 20:09:25,306 INFO    SenderThread:38256 [sender.py:send_request_defer():173] handle sender defer: 1
+2020-12-12 20:09:25,306 INFO    SenderThread:38256 [sender.py:send_request_defer():209] send defer: 2
+2020-12-12 20:09:25,307 DEBUG   HandlerThread:38256 [handler.py:handle_request():54] handle_request: defer
+2020-12-12 20:09:25,307 INFO    HandlerThread:38256 [handler.py:handle_request_defer():68] handle defer: 2
+2020-12-12 20:09:25,308 DEBUG   SenderThread:38256 [sender.py:send():88] send: request
+2020-12-12 20:09:25,308 DEBUG   SenderThread:38256 [sender.py:send_request():97] send_request: defer
+2020-12-12 20:09:25,308 INFO    SenderThread:38256 [sender.py:send_request_defer():173] handle sender defer: 2
+2020-12-12 20:09:25,308 INFO    SenderThread:38256 [sender.py:send_request_defer():209] send defer: 3
+2020-12-12 20:09:25,309 DEBUG   HandlerThread:38256 [handler.py:handle_request():54] handle_request: defer
+2020-12-12 20:09:25,309 INFO    HandlerThread:38256 [handler.py:handle_request_defer():68] handle defer: 3
+2020-12-12 20:09:25,310 DEBUG   SenderThread:38256 [sender.py:send():88] send: request
+2020-12-12 20:09:25,310 DEBUG   SenderThread:38256 [sender.py:send_request():97] send_request: defer
+2020-12-12 20:09:25,310 INFO    SenderThread:38256 [sender.py:send_request_defer():173] handle sender defer: 3
+2020-12-12 20:09:25,310 INFO    SenderThread:38256 [sender.py:send_request_defer():209] send defer: 4
+2020-12-12 20:09:25,311 DEBUG   HandlerThread:38256 [handler.py:handle_request():54] handle_request: defer
+2020-12-12 20:09:25,311 INFO    HandlerThread:38256 [handler.py:handle_request_defer():68] handle defer: 4
+2020-12-12 20:09:25,312 DEBUG   SenderThread:38256 [sender.py:send():88] send: request
+2020-12-12 20:09:25,312 DEBUG   SenderThread:38256 [sender.py:send_request():97] send_request: defer
+2020-12-12 20:09:25,312 INFO    SenderThread:38256 [sender.py:send_request_defer():173] handle sender defer: 4
+2020-12-12 20:09:25,312 INFO    SenderThread:38256 [sender.py:send_request_defer():209] send defer: 5
+2020-12-12 20:09:25,313 DEBUG   HandlerThread:38256 [handler.py:handle_request():54] handle_request: defer
+2020-12-12 20:09:25,313 INFO    HandlerThread:38256 [handler.py:handle_request_defer():68] handle defer: 5
+2020-12-12 20:09:25,313 DEBUG   SenderThread:38256 [sender.py:send():88] send: request
+2020-12-12 20:09:25,314 DEBUG   SenderThread:38256 [sender.py:send_request():97] send_request: defer
+2020-12-12 20:09:25,314 INFO    SenderThread:38256 [sender.py:send_request_defer():173] handle sender defer: 5
+2020-12-12 20:09:25,314 INFO    SenderThread:38256 [sender.py:send_request_defer():209] send defer: 6
+2020-12-12 20:09:25,315 DEBUG   HandlerThread:38256 [handler.py:handle_request():54] handle_request: defer
+2020-12-12 20:09:25,315 INFO    HandlerThread:38256 [handler.py:handle_request_defer():68] handle defer: 6
+2020-12-12 20:09:25,315 DEBUG   SenderThread:38256 [sender.py:send():88] send: request
+2020-12-12 20:09:25,316 DEBUG   SenderThread:38256 [sender.py:send_request():97] send_request: defer
+2020-12-12 20:09:25,316 INFO    SenderThread:38256 [sender.py:send_request_defer():173] handle sender defer: 6
+2020-12-12 20:09:25,316 INFO    SenderThread:38256 [sender.py:send_request_defer():209] send defer: 7
+2020-12-12 20:09:25,317 DEBUG   HandlerThread:38256 [handler.py:handle_request():54] handle_request: defer
+2020-12-12 20:09:25,317 INFO    HandlerThread:38256 [handler.py:handle_request_defer():68] handle defer: 7
+2020-12-12 20:09:25,317 DEBUG   SenderThread:38256 [sender.py:send():88] send: request
+2020-12-12 20:09:25,318 DEBUG   SenderThread:38256 [sender.py:send_request():97] send_request: defer
+2020-12-12 20:09:25,318 INFO    SenderThread:38256 [sender.py:send_request_defer():173] handle sender defer: 7
+2020-12-12 20:09:25,318 INFO    SenderThread:38256 [sender.py:send_request_defer():209] send defer: 8
+2020-12-12 20:09:25,319 DEBUG   HandlerThread:38256 [handler.py:handle_request():54] handle_request: defer
+2020-12-12 20:09:25,320 DEBUG   SenderThread:38256 [sender.py:send():88] send: final
+2020-12-12 20:09:25,320 INFO    HandlerThread:38256 [handler.py:handle_request_defer():68] handle defer: 8
+2020-12-12 20:09:25,320 DEBUG   SenderThread:38256 [sender.py:send():88] send: request
+2020-12-12 20:09:25,321 DEBUG   SenderThread:38256 [sender.py:send_request():97] send_request: defer
+2020-12-12 20:09:25,321 INFO    SenderThread:38256 [sender.py:send_request_defer():173] handle sender defer: 8
+2020-12-12 20:09:27,215 DEBUG   HandlerThread:38256 [handler.py:handle_request():54] handle_request: poll_exit
+2020-12-12 20:09:27,216 DEBUG   SenderThread:38256 [sender.py:send():88] send: request
+2020-12-12 20:09:27,216 DEBUG   SenderThread:38256 [sender.py:send_request():97] send_request: poll_exit
+2020-12-12 20:09:27,218 DEBUG   HandlerThread:38256 [handler.py:handle_request():54] handle_request: get_summary
+2020-12-12 20:09:27,220 DEBUG   HandlerThread:38256 [handler.py:handle_request():54] handle_request: sampled_history
+2020-12-12 20:09:27,222 DEBUG   HandlerThread:38256 [handler.py:handle_request():54] handle_request: shutdown
+2020-12-12 20:09:27,222 INFO    HandlerThread:38256 [handler.py:finish():267] shutting down handler
+2020-12-12 20:09:27,320 INFO    WriterThread:38256 [datastore.py:close():257] close: wandb/offline-run-20201212_200853-3md7o1cn/run-3md7o1cn.wandb
+2020-12-12 20:09:28,217 INFO    SenderThread:38256 [sender.py:finish():583] shutting down sender
+2020-12-12 20:09:28,218 INFO    MainThread:38256 [internal.py:handle_exit():137] Internal process exited

@@ -1,0 +1,113 @@
+GPU available: True, used: True
+TPU available: False, using: 0 TPU cores
+Multi-processing is handled by Slurm.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Using native 16bit precision.
+initializing ddp: GLOBAL_RANK: 2, MEMBER: 3/4
+GPU available: True, used: True
+TPU available: False, using: 0 TPU cores
+Multi-processing is handled by Slurm.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Using native 16bit precision.
+initializing ddp: GLOBAL_RANK: 0, MEMBER: 1/4
+GPU available: True, used: True
+TPU available: False, using: 0 TPU cores
+Multi-processing is handled by Slurm.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Using native 16bit precision.
+initializing ddp: GLOBAL_RANK: 1, MEMBER: 2/4
+GPU available: True, used: True
+TPU available: False, using: 0 TPU cores
+Multi-processing is handled by Slurm.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Using native 16bit precision.
+initializing ddp: GLOBAL_RANK: 3, MEMBER: 4/4
+wandb: Offline run mode, not syncing to the cloud.
+wandb: W&B is disabled in this directory.  Run `wandb on` to enable cloud syncing.
+Set SLURM handle signals.
+Set SLURM handle signals.
+Set SLURM handle signals.
+Set SLURM handle signals.
+
+  | Name  | Type | Params
+-------------------------------
+0 | model | Glow | 267 M 
+wandb: Network error (ConnectTimeout), entering retry loop. See wandb/offline-run-20201125_193557-268gyzhk/logs/debug-internal.log for full traceback.
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/utilities/distributed.py:45: UserWarning: The validation_epoch_end should not return anything as of 9.1.to log, use self.log(...) or self.write(...) directly in the LightningModule
+  warnings.warn(*args, **kwargs)
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/utilities/distributed.py:45: UserWarning: The {log:dict keyword} was deprecated in 0.9.1 and will be removed in 1.0.0
+Please use self.log(...) inside the lightningModule instead.
+
+# log on a step or aggregate epoch metric to the logger and/or progress bar
+# (inside LightningModule)
+self.log('train_loss', loss, on_step=True, on_epoch=True, prog_bar=True)
+  warnings.warn(*args, **kwargs)
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/ranger/ranger.py:138: UserWarning: This overload of addcmul_ is deprecated:
+	addcmul_(Number value, Tensor tensor1, Tensor tensor2)
+Consider using one of the following signatures instead:
+	addcmul_(Tensor tensor1, Tensor tensor2, *, Number value) (Triggered internally at  /opt/conda/conda-bld/pytorch_1595629395347/work/torch/csrc/utils/python_arg_parser.cpp:766.)
+  exp_avg_sq.mul_(beta2).addcmul_(1 - beta2, grad, grad)
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/ranger/ranger.py:138: UserWarning: This overload of addcmul_ is deprecated:
+	addcmul_(Number value, Tensor tensor1, Tensor tensor2)
+Consider using one of the following signatures instead:
+	addcmul_(Tensor tensor1, Tensor tensor2, *, Number value) (Triggered internally at  /opt/conda/conda-bld/pytorch_1595629395347/work/torch/csrc/utils/python_arg_parser.cpp:766.)
+  exp_avg_sq.mul_(beta2).addcmul_(1 - beta2, grad, grad)
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/ranger/ranger.py:138: UserWarning: This overload of addcmul_ is deprecated:
+	addcmul_(Number value, Tensor tensor1, Tensor tensor2)
+Consider using one of the following signatures instead:
+	addcmul_(Tensor tensor1, Tensor tensor2, *, Number value) (Triggered internally at  /opt/conda/conda-bld/pytorch_1595629395347/work/torch/csrc/utils/python_arg_parser.cpp:766.)
+  exp_avg_sq.mul_(beta2).addcmul_(1 - beta2, grad, grad)
+/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/ranger/ranger.py:138: UserWarning: This overload of addcmul_ is deprecated:
+	addcmul_(Number value, Tensor tensor1, Tensor tensor2)
+Consider using one of the following signatures instead:
+	addcmul_(Tensor tensor1, Tensor tensor2, *, Number value) (Triggered internally at  /opt/conda/conda-bld/pytorch_1595629395347/work/torch/csrc/utils/python_arg_parser.cpp:766.)
+  exp_avg_sq.mul_(beta2).addcmul_(1 - beta2, grad, grad)
+Epoch 8: val_loss reached 1.53897 (best 1.53897), saving model to /home/mvpavlukhin/speech2face/output/epoch=8.ckpt as top 1
+Epoch 8: val_loss was not in top 1
+Epoch 8: val_loss was not in top 1
+Epoch 8: val_loss was not in top 1
+Epoch 8: val_loss was not in top 1
+slurmstepd: error: slurm_get_node_energy: Socket timed out on send/recv operation
+slurmstepd: error: _get_joules_task: can't get info from slurmd
+slurmstepd: error: slurm_get_node_energy: Socket timed out on send/recv operation
+slurmstepd: error: _get_joules_task: can't get info from slurmd
+Epoch 9: val_loss was not in top 1
+Epoch 9: val_loss was not in top 1
+Epoch 9: val_loss was not in top 1
+Epoch 9: val_loss was not in top 1
+Epoch 9: val_loss was not in top 1
+Epoch 10: val_loss was not in top 1
+slurmstepd: error: slurm_get_node_energy: Socket timed out on send/recv operation
+slurmstepd: error: _get_joules_task: can't get info from slurmd
+slurmstepd: error: slurm_get_node_energy: Socket timed out on send/recv operation
+slurmstepd: error: _get_joules_task: can't get info from slurmd
+slurmstepd: error: slurm_get_node_energy: Socket timed out on send/recv operation
+slurmstepd: error: _get_joules_task: can't get info from slurmd
+slurmstepd: error: slurm_get_node_energy: Socket timed out on send/recv operation
+slurmstepd: error: _get_joules_task: can't get info from slurmd
+Epoch 10: val_loss was not in top 1
+Epoch 10: val_loss was not in top 1
+Epoch 10: val_loss was not in top 1
+Epoch 10: val_loss was not in top 1
+Epoch 11: val_loss was not in top 1
+Epoch 11: val_loss was not in top 1
+Epoch 11: val_loss was not in top 1
+Epoch 11: val_loss was not in top 1
+Epoch 11: val_loss was not in top 1
+Epoch 12: val_loss was not in top 1
+Epoch 12: val_loss was not in top 1
+slurmstepd: error: slurm_get_node_energy: Socket timed out on send/recv operation
+slurmstepd: error: _get_joules_task: can't get info from slurmd
+slurmstepd: error: slurm_get_node_energy: Socket timed out on send/recv operation
+slurmstepd: error: _get_joules_task: can't get info from slurmd
+Epoch 12: val_loss was not in top 1
+Epoch 12: val_loss was not in top 1
+slurmstepd: error: slurm_get_node_energy: Socket timed out on send/recv operation
+slurmstepd: error: _get_joules_task: can't get info from slurmd
+slurmstepd: error: slurm_get_node_energy: Socket timed out on send/recv operation
+slurmstepd: error: _get_joules_task: can't get info from slurmd
+Epoch 12: val_loss was not in top 1
+Epoch 13: val_loss was not in top 1
+srun: Job step aborted: Waiting up to 122 seconds for job step to finish.
+slurmstepd: error: *** JOB 149721 ON cn-001 CANCELLED AT 2020-11-30T00:48:08 ***
+slurmstepd: error: *** STEP 149721.0 ON cn-001 CANCELLED AT 2020-11-30T00:48:08 ***

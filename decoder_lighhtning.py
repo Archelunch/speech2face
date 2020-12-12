@@ -9,7 +9,7 @@ import pytorch_lightning as pl
 
 import wandb
 from ranger import Ranger
-
+from datasets import postprocess
 
 class DecoderLighting(pl.LightningModule):
     def __init__(
@@ -23,9 +23,9 @@ class DecoderLighting(pl.LightningModule):
         eval_batch_size,
         n_workers,
     ):
+        super().__init__()
         self.res_to_glow = res_to_glow
         self.glow = glow
-        self.opt_type = opt_type
         self.lr = lr
         self.n_workers = n_workers
         self.eval_batch_size = eval_batch_size
@@ -64,14 +64,16 @@ class DecoderLighting(pl.LightningModule):
     def training_step(self, batch, batch_nb):
         sound_emb, image = batch  # x embedding, y image
         z_sound = self.res_to_glow(sound_emb)  # from resemblyzer to z space
-        z_image = self.glow(image)  # from image to z space
-        image_from_sound = self.glow(
-            z_sound, reverse=True
-        )  # from z space (resemblyzer) to image
+        z_image,_,_ = self.glow(x=image, reverse=False)  # from image to z space
+        #print('Z image ',z_image.shape, 'Z sound ',z_sound.shape, 'SHAPE IMG',image.shape )
+        image_from_sound = self.glow(z=z_sound, y_onehot=None, temperature=1, reverse=True)  # from z space (resemblyzer) to image
 
+        image_from_sound = postprocess(image_from_sound)
+        #print('SHAPE',z_image.shape, z_sound.shape)
         loss1 = torch.nn.KLDivLoss()(z_image, z_sound)
-        loss2 = torch.nn.MSE()(image_from_sound, image)
+        loss2 = torch.nn.MSELoss()(image_from_sound, image)
 
+        
         return {
             "loss": loss1 + loss2,
             "log": {"MSE_loss": loss2, "Distance Loss": loss1},
@@ -80,12 +82,13 @@ class DecoderLighting(pl.LightningModule):
     def validation_step(self, batch, batch_nb):
         sound_emb, image = batch  # x embedding, y image
         z_sound = self.res_to_glow(sound_emb)  # from resemblyzer to z space
-        z_image = self.glow(image)  # from image to z space
-        image_from_sound = self.glow(
-            z_sound, reverse=True
-        )  # from z space (resemblyzer) to image
+        z_image,_,_ = self.glow(x=image, reverse=False)  # from image to z space
+        #print('Z image ',z_image.shape, 'Z sound ',z_sound.shape, 'SHAPE IMG',image.shape )
+        image_from_sound = self.glow(z=z_sound, y_onehot=None, temperature=1, reverse=True)  # from z space (resemblyzer) to image
 
+        image_from_sound = postprocess(image_from_sound)
+        #print('SHAPE',z_image.shape, z_sound.shape)
         loss1 = torch.nn.KLDivLoss()(z_image, z_sound)
-        loss2 = torch.nn.MSE()(image_from_sound, image)
+        loss2 = torch.nn.MSELoss()(image_from_sound, image)
 
         return {"val_loss": loss1 + loss2}

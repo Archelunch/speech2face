@@ -1,16 +1,17 @@
 dataset:
-  train_path: 
-  val_path: 
+  train_path: /home/mvpavlukhin/speech2face/train.txt
+  val_path: /home/mvpavlukhin/speech2face/test.txt
   image_size: 128
 
 glow:
   image_shape: 
-        - 256       
-        - 256
+        - 128       
+        - 128
         - 3
+
   #augment: True
   hidden_channels: 512
-  K: 32
+  K: 48
   L: 6
   actnorm_scale: 1.0
   flow_permutation: invconv # ["invconv", "shuffle", "reverse"]
@@ -18,8 +19,8 @@ glow:
   LU_decomposed: True
   learn_top: True
   y_condition: False
-  y_classes: 0
-  #glow_weights: glow_torch.ckpt
+  y_classes: 
+  glow_weights: /home/mvpavlukhin/speech2face/output/glow_torch.ckpt
 
 train_params:
   y_weight: 0.01 # "Weight for class condition loss"
@@ -39,6 +40,6 @@ env:
   saved_checkpoint: 
   seed: 666
   wandb_key: "21c78eafd4fee542c98beb82cab2ea36505fdc41"
-  db: "ddp"
+  db: 
   num_nodes: 4
   num_gpu: 1

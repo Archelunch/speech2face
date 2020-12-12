@@ -1,0 +1,156 @@
+GPU available: True, used: True
+TPU available: False, using: 0 TPU cores
+Multi-processing is handled by Slurm.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Using native 16bit precision.
+initializing ddp: GLOBAL_RANK: 1, MEMBER: 2/4
+GPU available: True, used: True
+TPU available: False, using: 0 TPU cores
+Multi-processing is handled by Slurm.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Using native 16bit precision.
+initializing ddp: GLOBAL_RANK: 2, MEMBER: 3/4
+GPU available: True, used: True
+TPU available: False, using: 0 TPU cores
+Multi-processing is handled by Slurm.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Using native 16bit precision.
+initializing ddp: GLOBAL_RANK: 0, MEMBER: 1/4
+GPU available: True, used: True
+TPU available: False, using: 0 TPU cores
+Multi-processing is handled by Slurm.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Using native 16bit precision.
+initializing ddp: GLOBAL_RANK: 3, MEMBER: 4/4
+wandb: Offline run mode, not syncing to the cloud.
+wandb: W&B is disabled in this directory.  Run `wandb on` to enable cloud syncing.
+Set SLURM handle signals.
+Set SLURM handle signals.
+Set SLURM handle signals.
+Set SLURM handle signals.
+
+  | Name  | Type | Params
+-------------------------------
+0 | model | Glow | 267 M 
+Traceback (most recent call last):
+  File "train.py", line 219, in <module>
+    main()
+  File "train.py", line 215, in main
+    trainer.fit(glow_light)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/trainer/trainer.py", line 444, in fit
+    results = self.accelerator_backend.train()
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/accelerators/ddp_hpc_accelerator.py", line 63, in train
+    self.ddp_train(process_idx=self.task_idx, model=model)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/accelerators/ddp_hpc_accelerator.py", line 176, in ddp_train
+    self.trainer.train_loop.setup_training(model)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/trainer/training_loop.py", line 174, in setup_training
+    self.trainer.checkpoint_connector.restore_weights(model)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/trainer/connectors/checkpoint_connector.py", line 75, in restore_weights
+    self.restore(self.trainer.resume_from_checkpoint, on_gpu=self.trainer.on_gpu)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/trainer/connectors/checkpoint_connector.py", line 100, in restore
+    checkpoint = pl_load(checkpoint_path, map_location=lambda storage, loc: storage)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/utilities/cloud_io.py", line 31, in load
+    with fs.open(path_or_url, "rb") as f:
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/fsspec/spec.py", line 886, in open
+    f = self._open(
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/fsspec/implementations/local.py", line 115, in _open
+    return LocalFileOpener(path, mode, fs=self, **kwargs)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/fsspec/implementations/local.py", line 197, in __init__
+    self._open()
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/fsspec/implementations/local.py", line 202, in _open
+    self.f = open(self.path, mode=self.mode)
+FileNotFoundError: [Errno 2] No such file or directory: '/home/mvpavlukhin/speech2face/output/epoch=8.ckpt'
+Traceback (most recent call last):
+  File "train.py", line 219, in <module>
+    main()
+  File "train.py", line 215, in main
+    trainer.fit(glow_light)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/trainer/trainer.py", line 444, in fit
+    results = self.accelerator_backend.train()
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/accelerators/ddp_hpc_accelerator.py", line 63, in train
+    self.ddp_train(process_idx=self.task_idx, model=model)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/accelerators/ddp_hpc_accelerator.py", line 176, in ddp_train
+    self.trainer.train_loop.setup_training(model)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/trainer/training_loop.py", line 174, in setup_training
+    self.trainer.checkpoint_connector.restore_weights(model)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/trainer/connectors/checkpoint_connector.py", line 75, in restore_weights
+    self.restore(self.trainer.resume_from_checkpoint, on_gpu=self.trainer.on_gpu)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/trainer/connectors/checkpoint_connector.py", line 100, in restore
+    checkpoint = pl_load(checkpoint_path, map_location=lambda storage, loc: storage)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/utilities/cloud_io.py", line 31, in load
+    with fs.open(path_or_url, "rb") as f:
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/fsspec/spec.py", line 886, in open
+    f = self._open(
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/fsspec/implementations/local.py", line 115, in _open
+    return LocalFileOpener(path, mode, fs=self, **kwargs)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/fsspec/implementations/local.py", line 197, in __init__
+    self._open()
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/fsspec/implementations/local.py", line 202, in _open
+    self.f = open(self.path, mode=self.mode)
+FileNotFoundError: [Errno 2] No such file or directory: '/home/mvpavlukhin/speech2face/output/epoch=8.ckpt'
+Traceback (most recent call last):
+  File "train.py", line 219, in <module>
+    main()
+  File "train.py", line 215, in main
+    trainer.fit(glow_light)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/trainer/trainer.py", line 444, in fit
+    results = self.accelerator_backend.train()
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/accelerators/ddp_hpc_accelerator.py", line 63, in train
+    self.ddp_train(process_idx=self.task_idx, model=model)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/accelerators/ddp_hpc_accelerator.py", line 176, in ddp_train
+    self.trainer.train_loop.setup_training(model)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/trainer/training_loop.py", line 174, in setup_training
+    self.trainer.checkpoint_connector.restore_weights(model)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/trainer/connectors/checkpoint_connector.py", line 75, in restore_weights
+    self.restore(self.trainer.resume_from_checkpoint, on_gpu=self.trainer.on_gpu)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/trainer/connectors/checkpoint_connector.py", line 100, in restore
+    checkpoint = pl_load(checkpoint_path, map_location=lambda storage, loc: storage)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/utilities/cloud_io.py", line 31, in load
+    with fs.open(path_or_url, "rb") as f:
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/fsspec/spec.py", line 886, in open
+    f = self._open(
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/fsspec/implementations/local.py", line 115, in _open
+    return LocalFileOpener(path, mode, fs=self, **kwargs)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/fsspec/implementations/local.py", line 197, in __init__
+    self._open()
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/fsspec/implementations/local.py", line 202, in _open
+    self.f = open(self.path, mode=self.mode)
+FileNotFoundError: [Errno 2] No such file or directory: '/home/mvpavlukhin/speech2face/output/epoch=8.ckpt'
+Traceback (most recent call last):
+  File "train.py", line 219, in <module>
+    main()
+  File "train.py", line 215, in main
+    trainer.fit(glow_light)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/trainer/trainer.py", line 444, in fit
+    results = self.accelerator_backend.train()
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/accelerators/ddp_hpc_accelerator.py", line 63, in train
+    self.ddp_train(process_idx=self.task_idx, model=model)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/accelerators/ddp_hpc_accelerator.py", line 176, in ddp_train
+    self.trainer.train_loop.setup_training(model)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/trainer/training_loop.py", line 174, in setup_training
+    self.trainer.checkpoint_connector.restore_weights(model)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/trainer/connectors/checkpoint_connector.py", line 75, in restore_weights
+    self.restore(self.trainer.resume_from_checkpoint, on_gpu=self.trainer.on_gpu)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/trainer/connectors/checkpoint_connector.py", line 100, in restore
+    checkpoint = pl_load(checkpoint_path, map_location=lambda storage, loc: storage)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/pytorch_lightning/utilities/cloud_io.py", line 31, in load
+    with fs.open(path_or_url, "rb") as f:
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/fsspec/spec.py", line 886, in open
+    f = self._open(
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/fsspec/implementations/local.py", line 115, in _open
+    return LocalFileOpener(path, mode, fs=self, **kwargs)
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/fsspec/implementations/local.py", line 197, in __init__
+    self._open()
+  File "/home/mvpavlukhin/.conda/envs/speech2face/lib/python3.8/site-packages/fsspec/implementations/local.py", line 202, in _open
+    self.f = open(self.path, mode=self.mode)
+FileNotFoundError: [Errno 2] No such file or directory: '/home/mvpavlukhin/speech2face/output/epoch=8.ckpt'
+wandb: Waiting for W&B process to finish, PID 116049
+wandb: Program failed with code 1. 
+srun: error: cn-011: task 1: Exited with exit code 1
+srun: error: cn-012: task 2: Exited with exit code 1
+srun: error: cn-013: task 3: Exited with exit code 1
+wandb: Find user logs for this run at: wandb/offline-run-20201205_214623-111ymzyq/logs/debug.log
+wandb: Find internal logs for this run at: wandb/offline-run-20201205_214623-111ymzyq/logs/debug-internal.log
+wandb: You can sync this run to the cloud by running:
+wandb: wandb sync wandb/offline-run-20201205_214623-111ymzyq
+srun: error: cn-010: task 0: Exited with exit code 1

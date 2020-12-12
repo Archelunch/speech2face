@@ -58,10 +58,10 @@ class ImagesEmbeddingsDataset(Dataset):
         img = process_one_image(img_path, self.size)
         emb = torch.tensor(np.load(emb_path))  # .unsqueeze(0)
         # Dummy to tensor for code compatabilty
-        return emb, img
+        return emb, preprocess(img)
 
 
 def get_dataset(train_path, val_path, image_size=128):
-    return ImagesEmbeddingsDataset(train_path, size), ImagesEmbeddingsDataset(
-        val_path, size
+    return ImagesEmbeddingsDataset(train_path, image_size), ImagesEmbeddingsDataset(
+        val_path, image_size
     )
