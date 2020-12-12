@@ -2,3 +2,4 @@
 **/wandb/
 *.txt
 wandb/
+output/
