@@ -4,3 +4,4 @@
 wandb/
 output/
 sbatch_logs/
+__pycache__/
