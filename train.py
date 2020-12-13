@@ -200,8 +200,8 @@ def main():
     )
     trainer = pl.Trainer(
         max_epochs=epochs,
-        # gpus=num_gpu,
-        # num_nodes=num_nodes,
+        gpus=num_gpu,
+        num_nodes=num_nodes,
         accelerator=db,
         gradient_clip_val=max_grad_norm,
         logger=wandb_logger,
@@ -211,7 +211,6 @@ def main():
         val_check_interval=0.2,
         # resume_from_checkpoint=saved_checkpoint,
         auto_select_gpus=True,
-        auto_scale_batch_size='power',
         plugins='ddp_sharded'
     )
     # trainer.tune(glow_light)
