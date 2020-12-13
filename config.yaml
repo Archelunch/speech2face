@@ -35,7 +35,7 @@ precision: 16
 num_gpu: 1
 accumulate_grad_batches: 5
 wandb_key: "21c78eafd4fee542c98beb82cab2ea36505fdc41"
-db: "ddp"
+db: "horovod"
 num_nodes: 4
 
 # specify hidra output directory
