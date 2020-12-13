@@ -1,5 +1,7 @@
 pytorch-lightning
+https://github.com/PyTorchLightning/fairscale/archive/pl_1.1.0.zip
 wandb
 hydra-core
 tqdm
 numba
+torch_optimizer

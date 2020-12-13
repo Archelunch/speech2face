@@ -1,7 +1,7 @@
 import random
 
 import torch
-import torch.optim as optim
+import torch_optimizer as optim
 from torch.optim.lr_scheduler import CosineAnnealingLR
 from torch.optim.swa_utils import AveragedModel, SWALR
 import torch.utils.data as data
@@ -9,7 +9,6 @@ from torchvision.utils import make_grid
 
 import pytorch_lightning as pl
 
-from ranger import Ranger
 import wandb
 
 
@@ -91,8 +90,8 @@ class GlowLighting(pl.LightningModule):
     def configure_optimizers(self):
         """TODO SWA"""
         if self.opt_type == "AdamW":
-            optimizer = Ranger(self.parameters(),
-                                    lr=self.lr)
+            optimizer = optim.AdaBelief(self.parameters(),
+                                        lr=self.lr)
 
         scheduler = CosineAnnealingLR(optimizer, T_max=1000)
 
@@ -111,7 +110,7 @@ class GlowLighting(pl.LightningModule):
     def val_dataloader(self):
         test_loader = data.DataLoader(
             self.test_dataset,
-            batch_size=self.eval_batch_size,
+            batch_size=self.batch_size,
             shuffle=False,
             num_workers=self.n_workers,
             drop_last=True,
@@ -128,11 +127,8 @@ class GlowLighting(pl.LightningModule):
         else:
             z, nll, y_logits = self.forward(x, None)
             losses = compute_loss(nll)
-
-        return {
-            "loss": losses["total_loss"],
-            "log": {"train_loss": losses["total_loss"]},
-        }
+        self.logger.experiment.log({"train_loss": losses["total_loss"]})
+        return losses["total_loss"]
 
     def sample(self, temperature):
         with torch.no_grad():
@@ -161,12 +157,9 @@ class GlowLighting(pl.LightningModule):
     def validation_epoch_end(self, validation_step_outputs):
         val_loss = torch.stack([x['val_loss']
                                 for x in validation_step_outputs]).mean()
-        temperature = max(0.1, round(random.random(), 2))
+        temperature = max(0.4, round(random.random(), 1))
         images = self.sample(temperature)
-        print("returning images")
-        return {
-            'val_loss': val_loss,
-            "log": {"images": [wandb.Image(images, caption="samples")],
-                    "val_loss": val_loss,
-                    "temperature": temperature},
-        }
+        self.logger.experiment.log({"images": [wandb.Image(images, caption="samples")],
+                                    "val_loss": val_loss,
+                                    "temperature": temperature})
+        return val_loss

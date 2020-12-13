@@ -31,7 +31,6 @@ from glow_lightning import GlowLighting
 #from mintnet_lightning import MintLighting
 
 
-
 def dict2namespace(config):
     namespace = argparse.Namespace()
     for key, value in config.items():
@@ -62,12 +61,13 @@ def check_dataset(dataset, dataroot, augment, download):
         celeba = get_CELEBA(augment, dataroot, download)
         input_size, num_classes, train_dataset, test_dataset = celeba
     elif dataset == 'faces':
-        train_dataset, test_dataset = get_faces_dataset('./train_faces.txt', './test_faces.txt')
+        train_dataset, test_dataset = get_faces_dataset(
+            './train_faces.txt', './test_faces.txt')
         input_size, num_classes, = (128, 128, 3), None
-        
-    print(f'returning dataset {dataset}, train: {len(train_dataset)} test: {len(test_dataset)}')
-    return input_size, num_classes,  train_dataset, test_dataset
 
+    print(
+        f'returning dataset {dataset}, train: {len(train_dataset)} test: {len(test_dataset)}')
+    return input_size, num_classes,  train_dataset, test_dataset
 
 
 def main():
@@ -189,7 +189,7 @@ def main():
     )
 
     wandb_logger = WandbLogger(
-        name="Back to GLOW experiment with CELEBA", project="glow-experiments"
+        name="Back to GLOW experiment with VGGFace", project="glow-experiments"
     )
 
     checkpoint_callback = ModelCheckpoint(
@@ -202,16 +202,19 @@ def main():
         max_epochs=epochs,
         gpus=num_gpu,
         num_nodes=num_nodes,
-        distributed_backend=db,
+        accelerator=db,
         gradient_clip_val=max_grad_norm,
         logger=wandb_logger,
         precision=precision,
-        checkpoint_callback=checkpoint_callback,
+        callbacks=[checkpoint_callback],
         accumulate_grad_batches=accumulate_grad_batches,
         val_check_interval=0.2,
-        resume_from_checkpoint=saved_checkpoint,
+        # resume_from_checkpoint=saved_checkpoint,
         auto_select_gpus=True,
+        auto_scale_batch_size='power',
+        plugins='ddp_sharded'
     )
+    trainer.tune(glow_light)
     trainer.fit(glow_light)
 
 
