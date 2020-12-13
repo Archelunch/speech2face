@@ -214,7 +214,7 @@ def main():
         auto_scale_batch_size='power',
         plugins='ddp_sharded'
     )
-    trainer.tune(glow_light)
+    # trainer.tune(glow_light)
     trainer.fit(glow_light)
 
 

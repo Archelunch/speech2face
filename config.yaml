@@ -30,12 +30,12 @@ output_dir: "../output/"
 fresh: True # "Remove output directory before starting"
 saved_model: "checkpoints"  # "Path to model to load for continuing training"
 saved_checkpoint: "/home/mvpavlukhin/speech2face/output/epoch=14.ckpt"
-seed: 666
+seed: 6666
 precision: 16
 num_gpu: 1
 accumulate_grad_batches: 5
 wandb_key: "21c78eafd4fee542c98beb82cab2ea36505fdc41"
-db: "ddp2"
+db: "ddp"
 num_nodes: 4
 
 # specify hidra output directory
