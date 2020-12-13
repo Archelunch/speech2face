@@ -200,8 +200,8 @@ def main():
     )
     trainer = pl.Trainer(
         max_epochs=epochs,
-        gpus=num_gpu,
-        num_nodes=num_nodes,
+        # gpus=num_gpu,
+        # num_nodes=num_nodes,
         accelerator=db,
         gradient_clip_val=max_grad_norm,
         logger=wandb_logger,
