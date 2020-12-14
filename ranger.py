@@ -40,7 +40,7 @@ class Ranger(Optimizer):
         # In both cases, worth testing on your dataset (.90 vs .95, 4 vs 5) to make sure which works best for you.
 
         # prep defaults and init torch.optim base
-        defaults = dict(lr=lr, alpha=alpha, k=k, step_counter=0, betas=betas,
+        defaults = dict(lr=lr, alpha=alpha, k=k, betas=betas,
                         N_sma_threshhold=N_sma_threshhold, eps=eps, weight_decay=weight_decay)
         super().__init__(params, defaults)
 
