@@ -93,8 +93,9 @@ class GlowLighting(pl.LightningModule):
         if self.opt_type == "AdamW":
             optimizer = optim.AdaBelief(self.parameters(),
                                         lr=self.lr, rectify=True, weight_decouple=True, eps=1e-16, weight_decay=1e-4)
+            scheduler = CosineAnnealingLR(optimizer, T_max=1000)
 
-        return [optimizer]  # , [scheduler]
+        return [optimizer], [scheduler]
 
     def train_dataloader(self):
         train_loader = data.DataLoader(
