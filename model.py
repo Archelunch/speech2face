@@ -19,20 +19,31 @@ from modules import (
 from utils import split_feature, uniform_binning_correction
 
 
-class Mish(nn.Module):
-    def __init__(self):
-        super().__init__()
+class Swish(torch.autograd.Function):
+    @staticmethod
+    def forward(ctx, i):
+        result = i * torch.sigmoid(i)
+        ctx.save_for_backward(i)
+        return result
 
-    def forward(self, x):
-        return x * (torch.tanh(F.softplus(x)))
+    @staticmethod
+    def backward(ctx, grad_output):
+        i = ctx.saved_variables[0]
+        sigmoid_i = torch.sigmoid(i)
+        return grad_output * (sigmoid_i * (1 + i * (1 - sigmoid_i)))
+
+
+class CustomSwish(nn.Module):
+    def forward(self, input_tensor):
+        return Swish.apply(input_tensor)
 
 
 def get_block(in_channels, out_channels, hidden_channels):
     block = nn.Sequential(
         Conv2d(in_channels, hidden_channels),
-        Mish(),
+        CustomSwish(),
         Conv2d(hidden_channels, hidden_channels, kernel_size=(1, 1)),
-        Mish(),
+        CustomSwish(),
         Conv2dZeros(hidden_channels, out_channels),
     )
     return block
