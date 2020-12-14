@@ -91,8 +91,8 @@ class GlowLighting(pl.LightningModule):
     def configure_optimizers(self):
         """TODO SWA"""
         if self.opt_type == "AdamW":
-            optimizer = Adamax(self.parameters(),
-                               lr=self.lr)
+            optimizer = optim.AdaBelief(self.parameters(),
+                                        lr=self.lr, rectify=True, weight_decouple=True, eps=1e-16, weight_decay=1e-4)
 
         return [optimizer]  # , [scheduler]
 
