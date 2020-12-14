@@ -4,7 +4,7 @@ import torch
 import torch_optimizer as optim
 from torch.optim.lr_scheduler import CosineAnnealingLR
 from torch.optim.swa_utils import AveragedModel, SWALR
-from torch.optim import Adamax
+from torch.optim import Adamax, AdamW
 import torch.utils.data as data
 from torchvision.utils import make_grid
 
@@ -91,8 +91,8 @@ class GlowLighting(pl.LightningModule):
     def configure_optimizers(self):
         """TODO SWA"""
         if self.opt_type == "AdamW":
-            optimizer = optim.AdaBelief(self.parameters(),
-                                        lr=self.lr, rectify=True, weight_decouple=True, eps=1e-16, weight_decay=1e-4)
+            optimizer = AdamW(self.parameters(),
+                              lr=self.lr)
             scheduler = CosineAnnealingLR(optimizer, T_max=1000)
 
         return [optimizer], [scheduler]
