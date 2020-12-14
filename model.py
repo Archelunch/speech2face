@@ -2,6 +2,7 @@ import math
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 from modules import (
     Conv2d,
@@ -18,12 +19,20 @@ from modules import (
 from utils import split_feature, uniform_binning_correction
 
 
+class Mish(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, x):
+        return x * (torch.tanh(F.softplus(x)))
+
+
 def get_block(in_channels, out_channels, hidden_channels):
     block = nn.Sequential(
         Conv2d(in_channels, hidden_channels),
-        nn.ReLU(inplace=False),
+        Mish(),
         Conv2d(hidden_channels, hidden_channels, kernel_size=(1, 1)),
-        nn.ReLU(inplace=False),
+        Mish(),
         Conv2dZeros(hidden_channels, out_channels),
     )
     return block
