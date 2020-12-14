@@ -93,7 +93,7 @@ class GlowLighting(pl.LightningModule):
             optimizer = optim.AdamP(self.parameters(),
                                     lr=self.lr)
 
-        return [optimizer], [scheduler]
+        return [optimizer]  # , [scheduler]
 
     def train_dataloader(self):
         train_loader = data.DataLoader(
